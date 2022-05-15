@@ -1,7 +1,7 @@
 /spring/.idea
 /spring/target
 
-HELP.md
+/spring/HELP.md
 /spring/target/
 !/spring/.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
