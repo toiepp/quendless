@@ -1,12 +1,17 @@
 package com.hyberlet.quendless.model;
 
-import lombok.Data;
+import lombok.*;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @Entity(name = "queue")
 public class Queue {
     @Id
@@ -28,5 +33,19 @@ public class Queue {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id")
+    @ToString.Exclude
     private Group group;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Queue queue = (Queue) o;
+        return queueId != null && Objects.equals(queueId, queue.queueId);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }
