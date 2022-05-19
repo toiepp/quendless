@@ -4,12 +4,10 @@ import com.hyberlet.quendless.model.User;
 import com.hyberlet.quendless.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 public class UserController {
@@ -24,6 +22,30 @@ public class UserController {
 
     @PostMapping("/user/register")
     public String registration(@RequestBody User user) {
-        return "ok";
+        if (user == null)
+            return "user not presented";
+        System.out.println("Name: '" + user.getLogin() + "' Password: '" + user.getPassword() + "'");
+        if (Objects.equals(user.getLogin(), ""))
+            return "user has empty login";
+        return userService.createUser(user);
     }
+
+    @GetMapping("/user")
+    public User getCurrentUser() {
+        User user = userService.getCurrentUser();
+        return user;
+    }
+
+    @PutMapping("/user/{user_id}")
+    public String editQueue(@PathVariable long user_id) {
+        // todo: realise
+        return null;
+    }
+
+    @DeleteMapping("/user/{user_id}")
+    public String deleteUser(@PathVariable long user_id) {
+        // todo: realise
+        return null;
+    }
+
 }
