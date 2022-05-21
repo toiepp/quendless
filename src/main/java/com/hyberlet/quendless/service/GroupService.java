@@ -1,7 +1,11 @@
 package com.hyberlet.quendless.service;
 
 import com.hyberlet.quendless.model.Group;
+import com.hyberlet.quendless.model.GroupMember;
 import com.hyberlet.quendless.model.User;
+import com.hyberlet.quendless.repository.GroupMemberRepository;
+import com.hyberlet.quendless.repository.GroupRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -9,9 +13,20 @@ import java.util.List;
 @Service
 public class GroupService {
 
-    public Group createGroup() {
-        // todo: realise
-        return null;
+    @Autowired
+    private GroupMemberRepository groupMemberRepository;
+    @Autowired
+    private GroupRepository groupRepository;
+
+    public List<Group> getUserGroups(User user) {
+        List<GroupMember> groupMembers = groupMemberRepository.getGroupMembersByUser(user);
+        List<Group> groups = groupMembers.stream().map(GroupMember::getGroup).toList();
+        return groups;
+    }
+
+    public Group createGroup(Group group) {
+        Group createdGroup = groupRepository.save(group);
+        return createdGroup;
     }
 
     public Group editGroup() {

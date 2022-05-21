@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -20,6 +23,7 @@ public class UserController {
         return userService.userList();
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/user/register")
     public String registration(@RequestBody User user) {
         if (user == null)
@@ -31,7 +35,10 @@ public class UserController {
     }
 
     @GetMapping("/user")
-    public User getCurrentUser() {
+    public User getCurrentUser(HttpServletRequest request) {
+        System.out.println(Arrays.toString(request.getCookies()));
+//        Principal principal = request.getUserPrincipal();
+//        System.out.println(principal.getName());
         User user = userService.getCurrentUser();
         return user;
     }

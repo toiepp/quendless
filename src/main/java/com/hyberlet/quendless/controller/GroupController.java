@@ -4,6 +4,10 @@ import com.hyberlet.quendless.model.Group;
 import com.hyberlet.quendless.model.Invite;
 import com.hyberlet.quendless.model.Queue;
 import com.hyberlet.quendless.model.User;
+import com.hyberlet.quendless.service.GroupMemberService;
+import com.hyberlet.quendless.service.GroupService;
+import com.hyberlet.quendless.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,10 +15,18 @@ import java.util.List;
 @RestController
 public class GroupController {
 
+    @Autowired
+    private GroupService groupService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private GroupMemberService groupMemberService;
+
     @GetMapping("/groups")
     public List<Group> getGroups() {
-        // TODO: realise
-        return null;
+        User user = userService.getCurrentUser();
+        List<Group> groups = groupService.getUserGroups(user);
+        return groups;
     }
 
     @GetMapping("/group/{group_id}")
@@ -41,10 +53,12 @@ public class GroupController {
         return null;
     }
 
-    @PostMapping("/groups")
+    @PostMapping("/group")
     public Group createGroup(@RequestBody Group group) {
-        // todo: realise
-        return null;
+        Group createdGroup = groupService.createGroup(group);
+        User creator = userService.getCurrentUser();
+        groupMemberService.createGroupMember(createdGroup, creator, "moderator");
+        return createdGroup;
     }
 
     @PutMapping("/group")
