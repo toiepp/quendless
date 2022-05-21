@@ -55,8 +55,8 @@ public class GroupController {
 
     @PostMapping("/group")
     public Group createGroup(@RequestBody Group group) {
-        Group createdGroup = groupService.createGroup(group);
         User creator = userService.getCurrentUser();
+        Group createdGroup = groupService.createGroup(group);
         groupMemberService.createGroupMember(createdGroup, creator, "moderator");
         return createdGroup;
     }

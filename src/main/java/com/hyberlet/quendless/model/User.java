@@ -1,9 +1,11 @@
 package com.hyberlet.quendless.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -31,6 +33,18 @@ public class User {
     @JoinColumn(name = "photo_id")
     @ToString.Exclude
     private Photo photo;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    @ToString.Exclude
+    @JsonIgnore
+    private List<GroupMember> memberships;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    @ToString.Exclude
+    @JsonIgnore
+    private List<Invite> invites;
 
     @Override
     public boolean equals(Object o) {

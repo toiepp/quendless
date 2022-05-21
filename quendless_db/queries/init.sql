@@ -15,6 +15,7 @@ CREATE INDEX user_login_index ON "user"(login);
 CREATE TABLE "group" (
     group_id BIGSERIAL PRIMARY KEY,
     name TEXT,
+    description TEXT,
     photo_id BIGINT REFERENCES photo(photo_id)
 );
 CREATE INDEX group_name_index ON "group"(name);

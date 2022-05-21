@@ -13,7 +13,7 @@ import java.util.Objects;
 @Entity(name = "invite")
 public class Invite {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "invite_id")
     private Long inviteId;
 

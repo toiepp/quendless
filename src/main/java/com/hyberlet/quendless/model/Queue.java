@@ -15,7 +15,7 @@ import java.util.Objects;
 @Entity(name = "queue")
 public class Queue {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "queue_id")
     private LocalDate queueId;
 

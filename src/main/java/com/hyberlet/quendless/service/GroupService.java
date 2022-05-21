@@ -8,6 +8,7 @@ import com.hyberlet.quendless.repository.GroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -20,7 +21,11 @@ public class GroupService {
 
     public List<Group> getUserGroups(User user) {
         List<GroupMember> groupMembers = groupMemberRepository.getGroupMembersByUser(user);
-        List<Group> groups = groupMembers.stream().map(GroupMember::getGroup).toList();
+        System.out.println(groupMembers);
+        List<Group> groups = new LinkedList<>();
+        for (GroupMember member : groupMembers) {
+            groups.add(groupRepository.getById(member.getGroup().getGroupId()));
+        }
         return groups;
     }
 

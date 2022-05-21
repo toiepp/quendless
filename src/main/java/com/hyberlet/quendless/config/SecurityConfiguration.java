@@ -36,7 +36,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
                 .cors().and()
                 .csrf().disable()
-                .authorizeRequests().antMatchers("/**").permitAll()
+                .authorizeRequests()
+                .antMatchers("/user/login", "/user/register", "/user").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
@@ -50,8 +51,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 .sessionFixation().migrateSession()
-                .and()
-                .logout().deleteCookies("JSESSIONID")
                 .and()
                 .rememberMe().key("secret")
                 .and()
