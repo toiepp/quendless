@@ -23,11 +23,11 @@ public class UserController {
         return userService.userList();
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/user/register")
     public String registration(@RequestBody User user) {
         if (user == null)
             return "user not presented";
+        System.out.println(user);
         System.out.println("Name: '" + user.getLogin() + "' Password: '" + user.getPassword() + "'");
         if (Objects.equals(user.getLogin(), ""))
             return "user has empty login";
@@ -35,16 +35,13 @@ public class UserController {
     }
 
     @GetMapping("/user")
-    public User getCurrentUser(HttpServletRequest request) {
-        System.out.println(Arrays.toString(request.getCookies()));
-//        Principal principal = request.getUserPrincipal();
-//        System.out.println(principal.getName());
+    public User getCurrentUser() {
         User user = userService.getCurrentUser();
         return user;
     }
 
     @PutMapping("/user/{user_id}")
-    public String editQueue(@PathVariable long user_id) {
+    public String editUser(@PathVariable long user_id) {
         // todo: realise
         return null;
     }

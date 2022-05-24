@@ -1,5 +1,6 @@
 package com.hyberlet.quendless.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.hibernate.Hibernate;
 
@@ -9,6 +10,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 @RequiredArgsConstructor
 @Entity(name = "queue_member")
 public class QueueMember {

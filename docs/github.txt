@@ -1,0 +1,5 @@
+Проект серверной части
+https://github.com/PenzaStreetGames/Quendless.git
+
+Проект клиентской части
+https://github.com/PenzaStreetGames/QuendlessFront.git

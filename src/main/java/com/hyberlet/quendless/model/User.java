@@ -1,6 +1,7 @@
 package com.hyberlet.quendless.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.hibernate.Hibernate;
 
@@ -12,6 +13,7 @@ import java.util.Objects;
 @Setter
 @ToString
 @RequiredArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 @Table(name = "user", schema = "public")
 @Entity(name = "user")
 public class User {
@@ -38,7 +40,13 @@ public class User {
     @JoinColumn(name = "user_id")
     @ToString.Exclude
     @JsonIgnore
-    private List<GroupMember> memberships;
+    private List<GroupMember> groupMemberships;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    @ToString.Exclude
+    @JsonIgnore
+    private List<QueueMember> queueMemberships;
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

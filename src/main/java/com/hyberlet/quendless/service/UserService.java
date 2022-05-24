@@ -27,7 +27,7 @@ public class UserService {
     public String createUser(User user) {
         User existing = userRepository.findUserByLogin(user.getLogin()).orElse(null);
         if (existing != null)
-            return "user already exists";
+            return "Пользователь с таким логином уже существует";
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         return "ok";
@@ -46,9 +46,5 @@ public class UserService {
         defaultUser.setLogin(username);
         System.out.println(username);
         return userRepository.findUserByLogin(username).orElse(defaultUser);
-    }
-
-    public User getUserByName(String name) {
-        return userRepository.findUserByLogin(name).orElse(null);
     }
 }

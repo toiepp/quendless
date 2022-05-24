@@ -40,22 +40,29 @@ public class GroupService {
     }
 
     public Group getGroupById(long group_id) {
-        // todo: realise
-        return null;
+        Group group = groupRepository.getById(group_id);
+        return group;
     }
 
     public List<Group> findGroupsByNameTemplate(String template) {
-        // todo: realise
-        return null;
+        List<Group> groups = groupRepository.findAll();
+        List<Group> result = new LinkedList<>();
+        for (Group group : groups) {
+            if (group.getName().contains(template)) {
+                result.add(group);
+            }
+        }
+        return result;
     }
 
     public void deleteGroup(long group_id) {
         // todo: realise
     }
 
-    public void addUserToGroup(long user_id, long group_id) {
-        // todo: realise
-    }
+//    public String addUserToGroup(User user, Group group) {
+//        GroupMember member = new GroupMember();
+//        return "member";
+//    }
 
     public void addQueueToGroup(long queue_id, long group_id) {
         // todo: realise
