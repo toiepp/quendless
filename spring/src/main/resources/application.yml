@@ -1,9 +1,12 @@
 spring:
   datasource:
-    url: "jdbc:postgresql://localhost:5431/quendless"
+    url: "jdbc:postgresql://postgres:5432/quendless"
     username: "postgres"
     password: "123456"
-
+  jpa:
+    properties:
+      hibernate:
+        dialect: "org.hibernate.dialect.PostgreSQLDialect"
   session:
     store-type: jdbc
     jdbc:

@@ -1,0 +1,24 @@
+version: '3'
+services:
+
+  postgres:
+    image: 'postgres:12.3-alpine'
+    environment:
+    - DB_NAME=quendless
+    - PGDATA=/var/lib/postgresql/data/quendless
+    - POSTGRES_PASSWORD=123456
+    ports:
+    - '5431:5432'
+    restart: always
+    volumes:
+    - ./postgres:/docker-entrypoint-initdb.d:ro
+
+  spring:
+    build: ./spring
+    ports:
+      - "8080:8080"
+    restart: always
+    volumes:
+      - ./spring/src/main/resources:/app/src/main/resources
+    links:
+      - postgres

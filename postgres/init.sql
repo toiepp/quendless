@@ -1,3 +1,8 @@
+SELECT 'CREATE DATABASE quendless'
+WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'quendless')\gexec
+
+\c quendless;
+
 CREATE TABLE photo (
     photo_id BIGSERIAL PRIMARY KEY,
     path TEXT
