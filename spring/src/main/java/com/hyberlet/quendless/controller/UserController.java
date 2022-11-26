@@ -11,6 +11,7 @@ import java.security.Principal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @RestController
 public class UserController {
@@ -41,13 +42,13 @@ public class UserController {
     }
 
     @PutMapping("/user/{user_id}")
-    public String editUser(@PathVariable long user_id) {
+    public String editUser(@PathVariable UUID user_id) {
         // todo: realise
         return null;
     }
 
     @DeleteMapping("/user/{user_id}")
-    public String deleteUser(@PathVariable long user_id) {
+    public String deleteUser(@PathVariable UUID user_id) {
         // todo: realise
         return null;
     }

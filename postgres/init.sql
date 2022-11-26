@@ -4,63 +4,74 @@ WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'quendless')\gexec
 \c quendless;
 
 CREATE TABLE photo (
-    photo_id BIGSERIAL PRIMARY KEY,
-    path TEXT
+    photo_id UUID PRIMARY KEY,
+    path VARCHAR(1024)
 );
 
 CREATE TABLE "user" (
-    user_id BIGSERIAL PRIMARY KEY,
-    name TEXT,
-    login TEXT,
-    password TEXT,
-    photo_id BIGINT REFERENCES photo(photo_id)
+    user_id UUID PRIMARY KEY,
+    name VARCHAR(256),
+    login VARCHAR(256),
+    password VARCHAR(256),
+    photo_id UUID REFERENCES photo(photo_id)
 );
 CREATE INDEX user_login_index ON "user"(login);
 
 CREATE TABLE "group" (
-    group_id BIGSERIAL PRIMARY KEY,
-    name TEXT,
-    description TEXT,
-    photo_id BIGINT REFERENCES photo(photo_id)
+    group_id UUID PRIMARY KEY,
+    name VARCHAR(256),
+    description VARCHAR(1024),
+    photo_id UUID REFERENCES photo(photo_id)
 );
 CREATE INDEX group_name_index ON "group"(name);
 
 CREATE TABLE queue (
-    queue_id BIGSERIAL PRIMARY KEY,
-    name TEXT,
-    description TEXT,
+    queue_id UUID PRIMARY KEY,
+    name VARCHAR(256),
+    description VARCHAR(1024),
     event_begin TIMESTAMP,
     event_end TIMESTAMP,
-    group_id BIGINT REFERENCES "group"(group_id)
+    group_id UUID REFERENCES "group"(group_id)
 );
 
 CREATE TABLE admin (
-    admin_id BIGSERIAL PRIMARY KEY,
-    user_id BIGINT REFERENCES "user"(user_id)
+    admin_id UUID PRIMARY KEY,
+    user_id UUID REFERENCES "user"(user_id)
 );
 
 CREATE TABLE invite (
-    invite_id BIGSERIAL PRIMARY KEY,
-    group_id BIGINT REFERENCES "group"(group_id),
-    user_id BIGINT REFERENCES "user"(user_id),
-    status TEXT
-);
-
-CREATE TABLE role (
-    role_id BIGSERIAL PRIMARY KEY,
-    name TEXT
+    invite_id UUID PRIMARY KEY,
+    group_id UUID REFERENCES "group"(group_id),
+    user_id UUID REFERENCES "user"(user_id),
+    status VARCHAR(256)
 );
 
 CREATE TABLE queue_member (
-    queue_member_id BIGSERIAL PRIMARY KEY,
-    queue_id BIGINT REFERENCES queue(queue_id),
-    user_id BIGINT REFERENCES "user"(user_id),
+    queue_member_id UUID PRIMARY KEY,
+    queue_id UUID REFERENCES queue(queue_id),
+    user_id UUID REFERENCES "user"(user_id),
     position INT
 );
 
 CREATE TABLE group_member (
-    group_member_id BIGSERIAL PRIMARY KEY,
-    user_id BIGINT REFERENCES "user"(user_id),
-    group_id BIGINT REFERENCES "group"(group_id),
-    role_id BIGINT REFERENCES role(role_id)
+    group_member_id UUID PRIMARY KEY,
+    user_id UUID REFERENCES "user"(user_id),
+    group_id UUID REFERENCES "group"(group_id)
+);
+
+CREATE TABLE permission (
+    permission_id UUID PRIMARY KEY,
+    user_id UUID REFERENCES "user"(user_id),
+    object_type VARCHAR(256),
+    object_id UUID,
+    permission_type VARCHAR(256),
+    expire TIMESTAMP
+);
+
+CREATE TABLE action (
+    action_id UUID PRIMARY KEY,
+    user_id UUID REFERENCES "user"(user_id),
+    action_time TIMESTAMP,
+    context VARCHAR(256),
+    description VARCHAR(256)
 );

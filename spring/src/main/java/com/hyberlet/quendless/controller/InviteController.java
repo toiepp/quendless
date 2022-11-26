@@ -4,6 +4,7 @@ import com.hyberlet.quendless.model.Invite;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 public class InviteController {
@@ -21,13 +22,13 @@ public class InviteController {
     }
 
     @GetMapping("/invite/accept/{invite_id}")
-    public String acceptInvite(@PathVariable long invite_id) {
+    public String acceptInvite(@PathVariable UUID invite_id) {
         // todo: realise
         return null;
     }
 
     @GetMapping("/invite/decline/{invite_id}")
-    public String declineInvite(@PathVariable long invite_id) {
+    public String declineInvite(@PathVariable UUID invite_id) {
         // todo: realise
         return null;
     }
@@ -39,7 +40,7 @@ public class InviteController {
     }
 
     @DeleteMapping("/invite/{invite_id}")
-    public String deleteInvite(@PathVariable long invite_id) {
+    public String deleteInvite(@PathVariable UUID invite_id) {
         // todo: realise
         return null;
     }

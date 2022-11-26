@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 public class GroupController {
@@ -25,18 +26,17 @@ public class GroupController {
     @GetMapping("/groups")
     public List<Group> getGroups() {
         User user = userService.getCurrentUser();
-        List<Group> groups = groupService.getUserGroups(user);
-        return groups;
+        return groupService.getUserGroups(user);
     }
 
     @GetMapping("/group/{groupId}")
-    public Group getGroup(@PathVariable long groupId) {
+    public Group getGroup(@PathVariable UUID groupId) {
         // TODO: realise
         return null;
     }
 
     @GetMapping("/group/{groupId}/queues")
-    public List<Queue> getGroupQueues(@PathVariable long groupId) {
+    public List<Queue> getGroupQueues(@PathVariable UUID groupId) {
         Group group = groupService.getGroupById(groupId);
         List<Queue> queues = queueService.getGroupQueues(group);
         System.out.println(queues);
@@ -44,7 +44,7 @@ public class GroupController {
     }
 
     @GetMapping("/group/{group_id}/members")
-    public List<User> getGroupMembers(@PathVariable long group_id) {
+    public List<User> getGroupMembers(@PathVariable UUID group_id) {
         // TODO: realise
         return null;
     }
@@ -52,8 +52,7 @@ public class GroupController {
     @GetMapping("/groups/find/{template}")
     public List<Group> findGroups(@PathVariable String template) {
         System.out.println(template);
-        List<Group> groups = groupService.findGroupsByNameTemplate(template);
-        return groups;
+        return groupService.findGroupsByNameTemplate(template);
     }
 
     @PostMapping("/group")
@@ -71,18 +70,17 @@ public class GroupController {
     }
 
     @DeleteMapping("/group/{groupId}")
-    public String deleteGroup(@PathVariable long groupId) {
+    public String deleteGroup(@PathVariable UUID groupId) {
         // todo: realise
         return null;
     }
 
     // TODO: переделать через заявки
     @GetMapping("/group/{groupId}/join")
-    public GroupMember joinUserToGroup(@PathVariable long groupId) {
+    public GroupMember joinUserToGroup(@PathVariable UUID groupId) {
         User user = userService.getCurrentUser();
         Group group = groupService.getGroupById(groupId);
-        GroupMember member = groupMemberService.createGroupMember(group, user, "user");
-        return member;
+        return groupMemberService.createGroupMember(group, user, "user");
     }
 
 

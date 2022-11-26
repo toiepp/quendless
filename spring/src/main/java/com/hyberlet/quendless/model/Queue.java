@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -23,7 +24,7 @@ public class Queue {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "queue_id")
-    private Long queueId;
+    private UUID queueId;
 
     @Column(name = "name")
     private String name;
@@ -33,12 +34,10 @@ public class Queue {
 
     @Column(name = "event_begin")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-//    @DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm")
     private LocalDateTime eventBegin;
 
     @Column(name = "event_end")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-//    @DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm")
     private LocalDateTime eventEnd;
 
     @ManyToOne(fetch = FetchType.LAZY)

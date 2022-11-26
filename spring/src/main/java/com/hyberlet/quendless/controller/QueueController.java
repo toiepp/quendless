@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 public class QueueController {
@@ -25,7 +26,7 @@ public class QueueController {
     private GroupService groupService;
 
     @GetMapping("/queue/{queue_id}/members")
-    public List<User> getQueueMembers(@PathVariable long queue_id) {
+    public List<User> getQueueMembers(@PathVariable UUID queue_id) {
         List<User> members = queueService.getQueueMembers(queue_id);
         System.out.println(members);
         return members;
@@ -38,39 +39,36 @@ public class QueueController {
     }
 
     @PostMapping("/group/{group_id}/queues")
-    public Queue createQueue(@RequestBody Queue queue, @PathVariable Long group_id) {
+    public Queue createQueue(@RequestBody Queue queue, @PathVariable UUID group_id) {
         Group group = groupService.getGroupById(group_id);
         System.out.println(group);
         queue.setGroup(group);
-        Queue createdQueue = queueService.createQueue(queue);
-        return createdQueue;
+        return queueService.createQueue(queue);
     }
 
     @GetMapping("/queue/{queue_id}/join")
-    public QueueMember joinQueue(@PathVariable long queue_id) {
+    public QueueMember joinQueue(@PathVariable UUID queue_id) {
         System.out.println(queue_id);
         User user = userService.getCurrentUser();
         Queue queue = queueService.getQueueById(queue_id);
-        QueueMember member = queueService.insertUserInQueue(user, queue);
-        return member;
+        return queueService.insertUserInQueue(user, queue);
     }
 
     @GetMapping("/queue/{queue_id}/leave")
-    public QueueMember leaveQueue(@PathVariable long queue_id) {
+    public QueueMember leaveQueue(@PathVariable UUID queue_id) {
         User user = userService.getCurrentUser();
         Queue queue = queueService.getQueueById(queue_id);
-        QueueMember member = queueService.removeUserFromQueue(user, queue);
-        return member;
+        return queueService.removeUserFromQueue(user, queue);
     }
 
     @PutMapping("/queue/{queue_id}")
-    public String editQueue(@PathVariable long queue_id) {
+    public String editQueue(@PathVariable UUID queue_id) {
         // todo: realise
         return null;
     }
 
     @DeleteMapping("/queue/{queue_id}")
-    public String deleteQueue(@PathVariable long queue_id) {
+    public String deleteQueue(@PathVariable UUID queue_id) {
         // todo: realise
         return null;
     }

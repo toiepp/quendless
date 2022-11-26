@@ -1,1 +1,1 @@
-INSERT INTO "role" (name) VALUES ('user'), ('moderator'); 
+-- INSERT INTO "role" (name) VALUES ('user'), ('moderator');

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class QueueService {
@@ -29,7 +30,7 @@ public class QueueService {
         return queueRepository.getQueuesByGroup(group);
     }
 
-    public Queue getQueueById(long queueId) {
+    public Queue getQueueById(UUID queueId) {
         return queueRepository.getById(queueId);
     }
 
@@ -48,7 +49,7 @@ public class QueueService {
         // todo: realise
     }
 
-    public List<User> getQueueMembers(long queue_id) {
+    public List<User> getQueueMembers(UUID queue_id) {
         Queue queue = queueRepository.getById(queue_id);
         List<QueueMember> queueMembers = queueMemberRepository.getQueueMembersByQueueOrderByPositionAsc(queue);
         List<User> users = new LinkedList<>();

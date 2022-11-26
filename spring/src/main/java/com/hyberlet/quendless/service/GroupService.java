@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class GroupService {
@@ -39,7 +40,7 @@ public class GroupService {
         return null;
     }
 
-    public Group getGroupById(long group_id) {
+    public Group getGroupById(UUID group_id) {
         Group group = groupRepository.getById(group_id);
         return group;
     }
