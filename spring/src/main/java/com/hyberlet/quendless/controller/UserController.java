@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
 import java.util.Arrays;
 import java.util.List;
@@ -25,14 +26,23 @@ public class UserController {
     }
 
     @PostMapping("/user/register")
-    public String registration(@RequestBody User user) {
-        if (user == null)
+    public String registration(@RequestBody User user, HttpServletResponse response) {
+        if (user == null) {
+            response.setStatus(400);
             return "user not presented";
+        }
         System.out.println(user);
         System.out.println("Name: '" + user.getLogin() + "' Password: '" + user.getPassword() + "'");
-        if (Objects.equals(user.getLogin(), ""))
+        if (Objects.equals(user.getLogin(), "")) {
+            response.setStatus(400);
             return "user has empty login";
-        return userService.createUser(user);
+        }
+        String result = userService.createUser(user);
+        if (!Objects.equals(result, "ok")) {
+            response.setStatus(400);
+            return "user already exists";
+        }
+        return "ok";
     }
 
     @GetMapping("/user")

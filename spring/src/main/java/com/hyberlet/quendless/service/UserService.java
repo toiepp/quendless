@@ -1,5 +1,6 @@
 package com.hyberlet.quendless.service;
 
+import com.hyberlet.quendless.aspect.LoggedAction;
 import com.hyberlet.quendless.model.User;
 import com.hyberlet.quendless.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +21,17 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @LoggedAction
     public List<User> userList() {
         return userRepository.findAll();
     }
 
+    @LoggedAction
     public String createUser(User user) {
         User existing = userRepository.findUserByLogin(user.getLogin()).orElse(null);
         if (existing != null)
-            return "Пользователь с таким логином уже существует";
+
+            return "User already exists";
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         return "ok";

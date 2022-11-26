@@ -1,5 +1,6 @@
 package com.hyberlet.quendless.service;
 
+import com.hyberlet.quendless.aspect.LoggedAction;
 import com.hyberlet.quendless.model.*;
 import com.hyberlet.quendless.repository.QueueMemberRepository;
 import com.hyberlet.quendless.repository.QueueRepository;
@@ -21,34 +22,41 @@ public class QueueService {
     @Autowired
     private UserRepository userRepository;
 
+    @LoggedAction
     public List<Queue> getAllQueues() {
         // todo: realise
         return null;
     }
 
+    @LoggedAction
     public List<Queue> getGroupQueues(Group group) {
         return queueRepository.getQueuesByGroup(group);
     }
 
+    @LoggedAction
     public Queue getQueueById(UUID queueId) {
         return queueRepository.getById(queueId);
     }
 
+    @LoggedAction
     public Queue createQueue(Queue queue) {
         System.out.println(queue);
         Queue createdQueue = queueRepository.save(queue);
         return createdQueue;
     }
 
+    @LoggedAction
     public Queue editQueue(Queue queue) {
         // todo: realise
         return null;
     }
 
+    @LoggedAction
     public void deleteQueue(long queue_id) {
         // todo: realise
     }
 
+    @LoggedAction
     public List<User> getQueueMembers(UUID queue_id) {
         Queue queue = queueRepository.getById(queue_id);
         List<QueueMember> queueMembers = queueMemberRepository.getQueueMembersByQueueOrderByPositionAsc(queue);
@@ -59,6 +67,7 @@ public class QueueService {
         return users;
     }
 
+    @LoggedAction
     public QueueMember insertUserInQueue(User user, Queue queue) {
         QueueMember member = queueMemberRepository.getQueueMembersByQueueAndUser(queue, user);
         if (member != null)
@@ -77,12 +86,14 @@ public class QueueService {
         return queueMemberRepository.save(queueMember);
     }
 
+    @LoggedAction
     public QueueMember removeUserFromQueue(User user, Queue queue) {
         QueueMember member = queueMemberRepository.getQueueMembersByQueueAndUser(queue, user);
         queueMemberRepository.delete(member);
         return member;
     }
 
+    @LoggedAction
     public void passUserBehind(User user, Queue queue) {
         // todo: realise
     }

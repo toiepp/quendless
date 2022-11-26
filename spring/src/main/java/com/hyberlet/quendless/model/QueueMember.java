@@ -3,6 +3,7 @@ package com.hyberlet.quendless.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -16,7 +17,8 @@ import java.util.UUID;
 @Entity(name = "queue_member")
 public class QueueMember {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(name = "queue_member_id")
     private UUID queueMemberId;
 

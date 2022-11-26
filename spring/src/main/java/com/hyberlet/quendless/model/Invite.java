@@ -2,6 +2,7 @@ package com.hyberlet.quendless.model;
 
 import lombok.*;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -14,7 +15,8 @@ import java.util.UUID;
 @Entity(name = "invite")
 public class Invite {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(name = "invite_id")
     private UUID inviteId;
 
