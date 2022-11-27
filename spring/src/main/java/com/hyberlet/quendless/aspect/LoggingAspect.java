@@ -31,8 +31,11 @@ public class LoggingAspect {
         try {
             res = joinPoint.proceed();
         }
+        catch (RuntimeException ex) {
+            throw ex;
+        }
         catch (Throwable t) {
-            t.printStackTrace();
+            System.out.println(t.getMessage());
         }
         long end = System.currentTimeMillis();
         log.info(joinPoint.getSignature().getName() + ": " + (end - begin) + " ms");

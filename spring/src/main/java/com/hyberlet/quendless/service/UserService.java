@@ -1,6 +1,8 @@
 package com.hyberlet.quendless.service;
 
 import com.hyberlet.quendless.aspect.LoggedAction;
+import com.hyberlet.quendless.controller.exceptions.AccessDeniedException;
+import com.hyberlet.quendless.controller.exceptions.BadRequestException;
 import com.hyberlet.quendless.model.User;
 import com.hyberlet.quendless.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class UserService {
@@ -19,9 +22,14 @@ public class UserService {
     private UserRepository userRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private PermissionService permissionService;
 
     @LoggedAction
     public List<User> userList() {
+        User user = getCurrentUser();
+        if (!permissionService.isAdmin(user))
+            throw new AccessDeniedException("access denied");
         return userRepository.findAll();
     }
 
@@ -29,10 +37,12 @@ public class UserService {
     public String createUser(User user) {
         User existing = userRepository.findUserByLogin(user.getLogin()).orElse(null);
         if (existing != null)
-
-            return "User already exists";
+            throw new BadRequestException("User already exists");
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
+        if (Objects.equals(user.getLogin(), "admin")) {
+            permissionService.createPermission(user, "all", null, "admin", null);
+        }
         return "ok";
     }
 

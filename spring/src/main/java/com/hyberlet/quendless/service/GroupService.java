@@ -1,6 +1,7 @@
 package com.hyberlet.quendless.service;
 
 import com.hyberlet.quendless.aspect.LoggedAction;
+import com.hyberlet.quendless.controller.exceptions.EntityNotFoundException;
 import com.hyberlet.quendless.model.Group;
 import com.hyberlet.quendless.model.GroupMember;
 import com.hyberlet.quendless.model.Permission;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -28,6 +30,10 @@ public class GroupService {
     @Autowired
     private PermissionService permissionService;
 
+    @LoggedAction
+    public List<Group> getGroups() {
+        return groupRepository.findAll();
+    }
 
     @LoggedAction
     public List<Group> getUserGroups(User user) {
@@ -45,7 +51,7 @@ public class GroupService {
         Group createdGroup = groupRepository.save(group);
         User user = userService.getCurrentUser();
         permissionService.createPermission(
-                userService.getCurrentUser(),
+                user,
                 "group",
                 createdGroup.getGroupId(),
                 "moderation",
@@ -62,9 +68,11 @@ public class GroupService {
     }
 
     @LoggedAction
-    public Group getGroupById(UUID group_id) {
-        Group group = groupRepository.getById(group_id);
-        return group;
+    public Group getGroupById(UUID groupId) throws EntityNotFoundException {
+        Optional<Group> group = groupRepository.findById(groupId);
+        if (group.isEmpty())
+            throw new EntityNotFoundException("no group with id " + groupId.toString());
+        return group.get();
     }
 
     @LoggedAction

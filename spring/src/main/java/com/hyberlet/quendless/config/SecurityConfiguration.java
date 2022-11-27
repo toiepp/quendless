@@ -35,11 +35,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .cors().and()
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/user/login", "/user/register", "/user").permitAll()
+                .antMatchers(
+                        "/users/login",
+                        "/users/register",
+                        "/users", "/v3/api-docs",
+                        "/swagger-ui/*").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
-                .loginProcessingUrl("/user/login")
+                .loginProcessingUrl("/users/login")
                 .usernameParameter("login")
                 .passwordParameter("password")
                 .failureHandler(authFailureHandler)
@@ -53,7 +57,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .rememberMe().key("secret")
                 .and()
                 .logout()
-                .logoutUrl("/logout")
+                .logoutUrl("/users/logout")
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID");
     }

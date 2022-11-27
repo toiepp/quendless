@@ -11,7 +11,13 @@ spring:
     store-type: jdbc
     jdbc:
       initialize-schema: always
+#  mvc:
+#    throw-exception-if-no-handler-found: true
 server:
   servlet:
     session:
       timeout: 15m
+
+#springdoc:
+#  swagger-ui:
+#    path: /swagger_ui

@@ -14,12 +14,21 @@ public class GroupMemberService {
 
     @Autowired
     private GroupMemberRepository groupMemberRepository;
+    @Autowired
+    private PermissionService permissionService;
 
     @LoggedAction
-    public GroupMember createGroupMember(Group group, User user, String roleName) {
+    public GroupMember createGroupMember(Group group, User user) {
         GroupMember member = new GroupMember();
         member.setUser(user);
         member.setGroup(group);
+        permissionService.createPermission(
+                user,
+                "group",
+                group.getGroupId(),
+                "membership",
+                null
+        );
         return groupMemberRepository.save(member);
     }
 

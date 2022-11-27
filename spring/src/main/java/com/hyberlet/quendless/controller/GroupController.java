@@ -1,14 +1,17 @@
 package com.hyberlet.quendless.controller;
 
-import com.hyberlet.quendless.model.*;
-import com.hyberlet.quendless.service.GroupMemberService;
-import com.hyberlet.quendless.service.GroupService;
-import com.hyberlet.quendless.service.QueueService;
-import com.hyberlet.quendless.service.UserService;
+import com.hyberlet.quendless.controller.exceptions.AccessDeniedException;
+import com.hyberlet.quendless.model.Group;
+import com.hyberlet.quendless.model.GroupMember;
+import com.hyberlet.quendless.model.Queue;
+import com.hyberlet.quendless.model.User;
+import com.hyberlet.quendless.service.*;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -22,65 +25,102 @@ public class GroupController {
     private GroupMemberService groupMemberService;
     @Autowired
     private QueueService queueService;
+    @Autowired
+    private PermissionService permissionService;
 
+    @Operation(
+            summary = "Получить группы.",
+            description = "Возвращает список групп, которых состоит пользователь. Если указан шаблон, ищет среди всех групп по шаблону названия.")
     @GetMapping("/groups")
-    public List<Group> getGroups() {
-        User user = userService.getCurrentUser();
-        return groupService.getUserGroups(user);
+    public List<Group> getGroups(@RequestParam Optional<String> template) {
+        List<Group> groups;
+        if (template.isPresent()) {
+            groups = groupService.findGroupsByNameTemplate(template.get());
+        } else {
+            User user = userService.getCurrentUser();
+            groups = groupService.getUserGroups(user);
+        }
+        return groups;
     }
 
-    @GetMapping("/group/{groupId}")
+    @Operation(
+            summary = "Получить группу по id.",
+            description = "Если не существует - NotFound. Пользователь должен в ней состоять, иначе - Forbidden."
+    )
+    @GetMapping("/groups/{groupId}")
     public Group getGroup(@PathVariable UUID groupId) {
-        // TODO: realise
-        return null;
+        Group group = groupService.getGroupById(groupId);
+        User user = userService.getCurrentUser();
+        if (groupService.getUserGroups(user).contains(group))
+            return group;
+        throw new AccessDeniedException("access denied");
     }
 
-    @GetMapping("/group/{groupId}/queues")
+    @Operation(
+            summary = "Получить очереди группы.",
+            description = "Если группа не существует - NotFound. Пользователь должен состоять в этой группе, иначе - Forbidden."
+    )
+    @GetMapping("/groups/{groupId}/queues")
     public List<Queue> getGroupQueues(@PathVariable UUID groupId) {
         Group group = groupService.getGroupById(groupId);
-        List<Queue> queues = queueService.getGroupQueues(group);
-        System.out.println(queues);
-        return queues;
+        User user = userService.getCurrentUser();
+        if (groupService.getUserGroups(user).contains(group)) {
+            return queueService.getGroupQueues(group);
+        }
+        throw new AccessDeniedException("access denied");
+
     }
 
-    @GetMapping("/group/{group_id}/members")
+    @Operation(
+            summary = "Получить список участников группы.",
+            description = "Если группа не существует - NotFound. Пользователь должен состоять в этой группе, иначе - Forbidden."
+    )
+    @GetMapping("/groups/{group_id}/members")
     public List<User> getGroupMembers(@PathVariable UUID group_id) {
-        // TODO: realise
+        // TODO: implement
         return null;
     }
 
-    @GetMapping("/groups/find/{template}")
-    public List<Group> findGroups(@PathVariable String template) {
-        System.out.println(template);
-        return groupService.findGroupsByNameTemplate(template);
-    }
-
-    @PostMapping("/group")
+    @Operation(
+            summary = "Создать новую группу",
+            description = "Создатель группы автоматически получает права модератора бессрочно"
+    )
+    @PostMapping("/groups")
     public Group createGroup(@RequestBody Group group) {
         User creator = userService.getCurrentUser();
         Group createdGroup = groupService.createGroup(group);
-        groupMemberService.createGroupMember(createdGroup, creator, "moderator");
+        groupMemberService.createGroupMember(createdGroup, creator);
         return createdGroup;
     }
 
-    @PutMapping("/group")
+    @Operation(
+            summary = "Редактировать поля группы"
+    )
+    @PutMapping("/groups")
     public Group editGroup(@RequestBody Group group) {
-        // todo: realise
+        // todo: implement
         return null;
     }
 
-    @DeleteMapping("/group/{groupId}")
+    @Operation (
+            summary = "Удалить группу по id"
+    )
+    @DeleteMapping("/groups/{groupId}")
     public String deleteGroup(@PathVariable UUID groupId) {
-        // todo: realise
+        // todo: implement
         return null;
     }
 
     // TODO: переделать через заявки
-    @GetMapping("/group/{groupId}/join")
+    @Operation(
+            summary = "Вступить в группу по id",
+            description = "Если группа не существует - NotFound. Также создает права члена группы."
+    )
+    @GetMapping("/groups/{groupId}/join")
     public GroupMember joinUserToGroup(@PathVariable UUID groupId) {
         User user = userService.getCurrentUser();
         Group group = groupService.getGroupById(groupId);
-        return groupMemberService.createGroupMember(group, user, "user");
+        return groupMemberService.createGroupMember(group, user);
     }
 
 

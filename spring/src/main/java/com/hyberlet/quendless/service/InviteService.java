@@ -11,14 +11,14 @@ public class InviteService {
 
     @LoggedAction
     public Invite getInviteById(UUID invite_id) {
-        // todo: realise
+        // todo: implement
         return null;
     }
 
 
     @LoggedAction
     public void changeStatus(UUID invite_id, String status) {
-        // todo: realise
+        // todo: implement
     }
 
 }

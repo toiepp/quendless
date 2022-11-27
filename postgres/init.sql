@@ -3,25 +3,18 @@ WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'quendless')\gexec
 
 \c quendless;
 
-CREATE TABLE photo (
-    photo_id UUID PRIMARY KEY,
-    path VARCHAR(1024)
-);
-
 CREATE TABLE "user" (
     user_id UUID PRIMARY KEY,
     name VARCHAR(256),
     login VARCHAR(256),
-    password VARCHAR(256),
-    photo_id UUID REFERENCES photo(photo_id)
+    password VARCHAR(256)
 );
 CREATE INDEX user_login_index ON "user"(login);
 
 CREATE TABLE "group" (
     group_id UUID PRIMARY KEY,
     name VARCHAR(256),
-    description VARCHAR(1024),
-    photo_id UUID REFERENCES photo(photo_id)
+    description VARCHAR(1024)
 );
 CREATE INDEX group_name_index ON "group"(name);
 
@@ -32,11 +25,6 @@ CREATE TABLE queue (
     event_begin TIMESTAMP,
     event_end TIMESTAMP,
     group_id UUID REFERENCES "group"(group_id)
-);
-
-CREATE TABLE admin (
-    admin_id UUID PRIMARY KEY,
-    user_id UUID REFERENCES "user"(user_id)
 );
 
 CREATE TABLE invite (

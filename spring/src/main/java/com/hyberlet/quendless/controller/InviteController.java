@@ -11,31 +11,31 @@ public class InviteController {
 
     @GetMapping("/invite")
     public List<Invite> getUserInvites() {
-        // todo: realise
+        // todo: implement
         return null;
     }
 
     @GetMapping("/group/{group_id}/invites")
     public List<Invite> getGroupInvites() {
-        // todo: realise
+        // todo: implement
         return null;
     }
 
     @PostMapping("/invite{invite_id}")
     public String acceptOrDeclineInvite(@PathVariable UUID invite_id) {
-        // todo: realise
+        // todo: implement
         return null;
     }
 
     @PostMapping("/invite")
     public String sendInvite(@RequestBody Invite invite) {
-        // todo: realise
+        // todo: implement
         return null;
     }
 
     @DeleteMapping("/invite/{invite_id}")
     public String deleteInvite(@PathVariable UUID invite_id) {
-        // todo: realise
+        // todo: implement
         return null;
     }
 }

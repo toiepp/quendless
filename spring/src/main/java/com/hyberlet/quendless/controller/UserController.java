@@ -1,65 +1,77 @@
 package com.hyberlet.quendless.controller;
 
+import com.hyberlet.quendless.controller.exceptions.BadRequestException;
 import com.hyberlet.quendless.model.User;
 import com.hyberlet.quendless.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.security.Principal;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
 @RestController
-public class UserController {
+public class UserController extends GlobalExceptionController {
 
     @Autowired
     private UserService userService;
 
+    // TODO: добавить всем методам @GetMapping(value = "/test", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(
+            summary = "Получить список пользователей",
+            description = "Только для админов. Для других пользователей - Forbidden"
+    )
     @GetMapping("/users")
     public List<User> getAll() {
         return userService.userList();
     }
 
-    @PostMapping("/user/register")
-    public String registration(@RequestBody User user, HttpServletResponse response) {
-        if (user == null) {
-            response.setStatus(400);
-            return "user not presented";
-        }
+
+    @Operation(
+            summary = "Регистрация пользователя",
+            description = "Создаёт нового пользователя. При неправильном заполнении сущности - BadRequest. Если логин уже занят - тоже BadRequest."
+    )
+    @PostMapping("/users/register")
+    @ResponseStatus(HttpStatus.CREATED)
+    public String registration(@RequestBody User user) {
+        if (user == null)
+            throw new BadRequestException("user not presented");
         System.out.println(user);
         System.out.println("Name: '" + user.getLogin() + "' Password: '" + user.getPassword() + "'");
-        if (Objects.equals(user.getLogin(), "")) {
-            response.setStatus(400);
-            return "user has empty login";
-        }
-        String result = userService.createUser(user);
-        if (!Objects.equals(result, "ok")) {
-            response.setStatus(400);
-            return "user already exists";
-        }
+        if (Objects.equals(user.getLogin(), ""))
+            throw new BadRequestException("user has empty login");
+        userService.createUser(user);
         return "ok";
     }
 
-    @GetMapping("/user")
+    @Operation(
+            summary = "Получить текущего пользователя",
+            description = "Возвращает пользователя, который отправил этот запрос"
+    )
+    @GetMapping("/users/me")
     public User getCurrentUser() {
-        User user = userService.getCurrentUser();
-        return user;
+        return userService.getCurrentUser();
     }
 
+    @Operation(
+            summary = "Редактировать поля пользователя",
+            description = "TODO"
+    )
     @PutMapping("/user/{user_id}")
     public String editUser(@PathVariable UUID user_id) {
-        // todo: realise
+        // todo: implement
         return null;
     }
 
+    @Operation(
+            summary = "Удалить пользователя по id",
+            description = "TODO"
+    )
     @DeleteMapping("/user/{user_id}")
     public String deleteUser(@PathVariable UUID user_id) {
-        // todo: realise
+        // todo: implement
         return null;
     }
 

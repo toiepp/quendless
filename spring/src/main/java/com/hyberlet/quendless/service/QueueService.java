@@ -1,6 +1,7 @@
 package com.hyberlet.quendless.service;
 
 import com.hyberlet.quendless.aspect.LoggedAction;
+import com.hyberlet.quendless.controller.exceptions.EntityNotFoundException;
 import com.hyberlet.quendless.model.*;
 import com.hyberlet.quendless.repository.QueueMemberRepository;
 import com.hyberlet.quendless.repository.QueueRepository;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -24,7 +26,7 @@ public class QueueService {
 
     @LoggedAction
     public List<Queue> getAllQueues() {
-        // todo: realise
+        // todo: implement
         return null;
     }
 
@@ -47,19 +49,21 @@ public class QueueService {
 
     @LoggedAction
     public Queue editQueue(Queue queue) {
-        // todo: realise
+        // todo: implement
         return null;
     }
 
     @LoggedAction
     public void deleteQueue(long queue_id) {
-        // todo: realise
+        // todo: implement
     }
 
     @LoggedAction
     public List<User> getQueueMembers(UUID queue_id) {
-        Queue queue = queueRepository.getById(queue_id);
-        List<QueueMember> queueMembers = queueMemberRepository.getQueueMembersByQueueOrderByPositionAsc(queue);
+        Optional<Queue> queue = queueRepository.findById(queue_id);
+        if (queue.isEmpty())
+            throw new EntityNotFoundException("queue does not exist " + queue_id);
+        List<QueueMember> queueMembers = queueMemberRepository.getQueueMembersByQueueOrderByPositionAsc(queue.get());
         List<User> users = new LinkedList<>();
         for (QueueMember member : queueMembers) {
             users.add(userRepository.getById(member.getUser().getUserId()));
@@ -95,6 +99,6 @@ public class QueueService {
 
     @LoggedAction
     public void passUserBehind(User user, Queue queue) {
-        // todo: realise
+        // todo: implement
     }
 }
