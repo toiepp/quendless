@@ -16,9 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Configuration
@@ -86,7 +84,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         configuration.setAllowedOrigins(List.of("http://localhost:3000"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PUT","OPTIONS","PATCH", "DELETE"));
         configuration.setAllowedHeaders(List.of("*"));
-//        configuration.setExposedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
         source.registerCorsConfiguration("/**", configuration);
         return source;

@@ -31,11 +31,6 @@ public class Group {
     @Column(name = "description")
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "photo_id")
-    @ToString.Exclude
-    private Photo photo;
-
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id")
     @ToString.Exclude

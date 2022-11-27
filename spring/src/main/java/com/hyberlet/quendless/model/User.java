@@ -34,11 +34,6 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "photo_id")
-    @ToString.Exclude
-    private Photo photo;
-
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @ToString.Exclude

@@ -9,7 +9,7 @@ import java.util.UUID;
 @RestController
 public class InviteController {
 
-    @GetMapping("/invites")
+    @GetMapping("/invite")
     public List<Invite> getUserInvites() {
         // todo: realise
         return null;
@@ -21,19 +21,13 @@ public class InviteController {
         return null;
     }
 
-    @GetMapping("/invite/accept/{invite_id}")
-    public String acceptInvite(@PathVariable UUID invite_id) {
+    @PostMapping("/invite{invite_id}")
+    public String acceptOrDeclineInvite(@PathVariable UUID invite_id) {
         // todo: realise
         return null;
     }
 
-    @GetMapping("/invite/decline/{invite_id}")
-    public String declineInvite(@PathVariable UUID invite_id) {
-        // todo: realise
-        return null;
-    }
-
-    @PostMapping("/invite/send")
+    @PostMapping("/invite")
     public String sendInvite(@RequestBody Invite invite) {
         // todo: realise
         return null;
