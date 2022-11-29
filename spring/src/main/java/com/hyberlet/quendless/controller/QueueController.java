@@ -47,7 +47,7 @@ public class QueueController {
     }
 
     @Operation(
-            summary = "Получить очереди группы по id группы",
+            summary = "Создаёт очередь в группе с указанным id",
             description = "Если группы не существует - NotFound. Если пользователь не состоит в этой группе - Forbidden"
     )
     @PostMapping("/groups/{groupId}/queues")

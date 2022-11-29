@@ -46,12 +46,6 @@ public class User {
     @JsonIgnore
     private List<QueueMember> queueMemberships;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    @ToString.Exclude
-    @JsonIgnore
-    private List<Invite> invites;
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -18,6 +18,6 @@ server:
     session:
       timeout: 15m
 
-#springdoc:
-#  swagger-ui:
-#    path: /swagger_ui
+springdoc:
+  swagger-ui:
+    path: /swagger_ui

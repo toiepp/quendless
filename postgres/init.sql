@@ -60,6 +60,6 @@ CREATE TABLE action (
     action_id UUID PRIMARY KEY,
     user_id UUID REFERENCES "user"(user_id),
     action_time TIMESTAMP,
-    context VARCHAR(256),
-    description VARCHAR(256)
+    context TEXT,
+    description TEXT
 );

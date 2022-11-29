@@ -22,7 +22,7 @@ public class QueueService {
     @Autowired
     private QueueMemberRepository queueMemberRepository;
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @LoggedAction
     public List<Queue> getAllQueues() {
@@ -66,7 +66,8 @@ public class QueueService {
         List<QueueMember> queueMembers = queueMemberRepository.getQueueMembersByQueueOrderByPositionAsc(queue.get());
         List<User> users = new LinkedList<>();
         for (QueueMember member : queueMembers) {
-            users.add(userRepository.getById(member.getUser().getUserId()));
+            Optional<User> user = userService.findUserById(member.getUser().getUserId());
+            user.ifPresent(users::add);
         }
         return users;
     }

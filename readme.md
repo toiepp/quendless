@@ -10,6 +10,5 @@
 
 ```sh
 cd "корень проекта"
-mvn dependency:resolve 
-mvn spring-boot:start
+docker-compose up --build
 ```

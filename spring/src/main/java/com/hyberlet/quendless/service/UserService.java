@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -58,5 +60,9 @@ public class UserService {
         User defaultUser = new User();
         defaultUser.setLogin(username);
         return userRepository.findUserByLogin(username).orElse(defaultUser);
+    }
+
+    public Optional<User> findUserById(UUID userId) {
+        return userRepository.findById(userId);
     }
 }

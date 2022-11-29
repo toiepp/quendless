@@ -41,12 +41,6 @@ public class Group {
     @JoinColumn(name = "group_id")
     @ToString.Exclude
     @JsonIgnore
-    private List<Invite> invites;
-
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "group_id")
-    @ToString.Exclude
-    @JsonIgnore
     private List<Queue> queues;
 
     @Override

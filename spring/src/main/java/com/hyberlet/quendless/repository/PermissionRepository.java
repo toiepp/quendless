@@ -13,7 +13,7 @@ import java.util.UUID;
 public interface PermissionRepository extends JpaRepository<Permission, UUID> {
     @Query("select p from permission p " +
             "where p.user = ?1 and p.objectType = ?2 and p.objectId = ?3 and (p.expire is null or current_timestamp() < p.expire)")
-    List<Permission> getPermissionsByUserAndObjectTypeAndObjectId(User user, String objectType, UUID objectId);
+    List<Permission> getPermissionsByUser(User user, String objectType, UUID objectId);
 
     @Query("select p from permission p " +
             "where p.user = ?1 and p.permissionType = 'admin' and (p.expire is null or current_timestamp() < p.expire)")

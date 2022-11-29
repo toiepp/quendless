@@ -13,7 +13,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @RestController
-public class UserController extends GlobalExceptionController {
+public class UserController {
 
     @Autowired
     private UserService userService;
@@ -59,7 +59,7 @@ public class UserController extends GlobalExceptionController {
             summary = "Редактировать поля пользователя",
             description = "TODO"
     )
-    @PutMapping("/user/{user_id}")
+    @PutMapping("/users/{user_id}")
     public String editUser(@PathVariable UUID user_id) {
         // todo: implement
         return null;
@@ -69,7 +69,7 @@ public class UserController extends GlobalExceptionController {
             summary = "Удалить пользователя по id",
             description = "TODO"
     )
-    @DeleteMapping("/user/{user_id}")
+    @DeleteMapping("/users/{user_id}")
     public String deleteUser(@PathVariable UUID user_id) {
         // todo: implement
         return null;
