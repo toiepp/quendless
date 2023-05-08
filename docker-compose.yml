@@ -2,7 +2,7 @@ version: '3'
 services:
 
   postgres:
-    image: 'postgres:12.3-alpine'
+    image: 'postgres:15.2-alpine'
     environment:
     - DB_NAME=quendless
     - PGDATA=/var/lib/postgresql/data/quendless
@@ -22,3 +22,14 @@ services:
       - ./spring/src/main/resources:/app/src/main/resources
     links:
       - postgres
+
+  react:
+    build: ./react
+    ports:
+      - "3001:3000"
+    restart: always
+    volumes:
+      - ./react:/src/app
+    links:
+      - postgres
+      - spring
