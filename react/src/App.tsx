@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import { BrowserRouter as Router} from 'react-router-dom';
 import {PageTemplate} from "./components/layout/PageTemplate";
 import {PageHeader} from "./components/layout/PageHeader";
@@ -6,23 +6,17 @@ import {PageFooter} from "./components/layout/PageFooter";
 import './App.css';
 import {AuthUserRoutes} from "./routes/AuthUserRoutes";
 import {GuestRoutes} from "./routes/GuestRoutes";
-import {useDispatch, useSelector} from "react-redux";
-import {checkAuth} from "./requests/auth";
-import {setLocalIsAuth} from "./store/slices/authSlice";
+import {useSelector} from "react-redux";
+import {AuthChecker} from "./components/utils/AuthChecker";
 
 export function App() {
-    const isAuth = useSelector((state: any) => state.auth.isAuth)
-    const dispatch = useDispatch()
-    useEffect(() => {
-        checkAuth().then((response) => {
-            dispatch(setLocalIsAuth(response))
-        })
-    })
+    const localIsAuth = useSelector((state: any) => state.auth.localIsAuth)
     return (
             <PageTemplate>
+                <AuthChecker/>
                 <Router>
-                    <PageHeader isAuth={isAuth}/>
-                    {isAuth ? <AuthUserRoutes/> : <GuestRoutes/>}
+                    <PageHeader isAuth={localIsAuth}/>
+                    {localIsAuth ? <AuthUserRoutes/> : <GuestRoutes/>}
                     <PageFooter/>
                 </Router>
             </PageTemplate>

@@ -25,7 +25,10 @@ async function makeRequest({relativeUrl, method, body = null, contentType = "app
     console.log(init)
     return await fetch(`${serverUrl}${relativeUrl}`, init)
         .then((response) => response.json())
-        .then((data) => data)
+        .then((data) => {
+            console.log(data)
+            return data
+        })
 }
 
 export default makeRequest;

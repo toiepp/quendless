@@ -5,11 +5,11 @@ import {Navigate} from "react-router-dom";
 
 export function AuthPage() {
     const mode = useSelector((state: any) => state.auth.mode)
-    const isAuth = useSelector((state: any) => state.auth.isAuth)
+    const localIsAuth = useSelector((state: any) => state.auth.localIsAuth)
     return (
         <>
             {mode === 'signUp' ? <SignupPanel/> : <SigninPanel/>}
-            {isAuth && <Navigate to={'/profile'}/>}
+            {localIsAuth && <Navigate to={'/profile'}/>}
         </>
     );
 }

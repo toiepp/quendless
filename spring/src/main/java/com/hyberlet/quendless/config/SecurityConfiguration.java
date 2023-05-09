@@ -2,6 +2,7 @@ package com.hyberlet.quendless.config;
 
 import com.hyberlet.quendless.controller.security.AuthFailureHandler;
 import com.hyberlet.quendless.controller.security.AuthSuccessHandler;
+import com.hyberlet.quendless.controller.security.CustomLogoutSuccessHandler;
 import com.hyberlet.quendless.service.UserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -27,7 +28,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     private AuthSuccessHandler authSuccessHandler;
     @Autowired
+    private CustomLogoutSuccessHandler customLogoutSuccessHandler;
+    @Autowired
     private UserDetailService userDetailService;
+
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -58,7 +62,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .logout()
                 .logoutUrl("/users/logout")
-//                .logoutSuccessHandler()
+                .logoutSuccessHandler(customLogoutSuccessHandler)
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID");
     }

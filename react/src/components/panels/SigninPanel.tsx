@@ -1,14 +1,14 @@
 import {Panel} from "../primitives/Panel";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    handleSignInResponse,
+    setLocalIsAuth,
     switchToSignUp,
     updateLogin,
-    updatePassword, updateSignInValidationErrors,
+    updatePassword,
 } from "../../store/slices/authSlice";
-import {} from "../../requests/auth";
 import {ServerMessage, User} from "../../types";
 import makeRequest from "../../requests/base";
+import {useState} from "react";
 
 async function makeSignInRequest(user: User): Promise<ServerMessage> {
     const formBody = Object.keys(user).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(user[key])).join('&');
@@ -21,20 +21,27 @@ async function makeSignInRequest(user: User): Promise<ServerMessage> {
     return data as ServerMessage
 }
 
-function validateSignInForm({login, password}: User): string[] {
+async function validateSignInForm({login, password}: User): Promise<string[]> {
     const errors = []
     if (login === '')
         errors.push('Поле "Логин" пустое')
     if (password === '')
         errors.push('Поле "Пароль" пустое')
-    return errors
+    if (errors.length > 0) {
+        return errors
+    }
+    const data = await makeSignInRequest({login: login, password: password})
+    console.log(data)
+    if (data.message !== "Ok")
+        return [data.message]
+    return []
 }
 
 export function SigninPanel () {
     const login = useSelector((state: any) => state.auth.login)
     const password = useSelector((state: any) => state.auth.password)
-    const errors = useSelector((state: any) => state.auth.errors)
     const dispatch = useDispatch()
+    const [errors, setErrors]: [string[], any] = useState([])
     return (
             <Panel>
                 <div className={'d-flex flex-row justify-content-start'}>
@@ -58,14 +65,9 @@ export function SigninPanel () {
                 </form>
                 <button className="btn btn-primary m-2"
                         onClick={async () => {
-                            let errors = validateSignInForm({login: login, password: password})
-                            if (errors.length > 0) {
-                                dispatch(updateSignInValidationErrors(errors))
-                                return
-                            }
-                            const data = await makeSignInRequest({login: login, password: password})
-                            console.log(data)
-                            dispatch(handleSignInResponse(data))
+                            let errors = await validateSignInForm({login: login, password: password})
+                            setErrors(errors)
+                            dispatch(setLocalIsAuth(errors.length === 0))
                         }}>Войти</button>
             </Panel>
     );

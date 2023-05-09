@@ -2,16 +2,16 @@ import {Panel} from "../primitives/Panel";
 import {NavLink} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    handleSignUpResponse,
+    setLocalIsAuth,
     switchToSignIn,
     toggleAgree,
     updateLogin,
     updatePassword,
     updatePasswordAgain,
-    updateSignUpValidationErrors,
 } from "../../store/slices/authSlice";
 import {ServerMessage, User} from "../../types";
 import makeRequest from "../../requests/base";
+import {useState} from "react";
 
 async function makeSignUpRequest(user: User): Promise<ServerMessage> {
     const data = await makeRequest({
@@ -28,7 +28,7 @@ interface SignUpForm {
     passwordAgain: string
 }
 
-function validateSignUpForm({login, password, passwordAgain}: SignUpForm): string[] {
+async function validateSignUpForm({login, password, passwordAgain}: SignUpForm): Promise<string[]> {
     const errors = []
     if (login === '')
         errors.push('Поле "Логин" пустое')
@@ -36,16 +36,22 @@ function validateSignUpForm({login, password, passwordAgain}: SignUpForm): strin
         errors.push('Поле "Пароль" пустое')
     if (password !== passwordAgain)
         errors.push('Пароли не совпадают')
-    return errors
+    if (errors.length > 0)
+        return errors
+    const data = await makeSignUpRequest({login: login, password: password})
+    console.log(data)
+    if (data.message !== "Ok")
+        return [data.message]
+    return []
 }
 
 export function SignupPanel() {
     const agree: boolean = useSelector((state: any) => state.auth.agree)
-    const errors = useSelector((state: any) => state.auth.errors)
     const login = useSelector((state: any) => state.auth.login)
     const password = useSelector((state: any) => state.auth.password)
     const passwordAgain = useSelector((state: any) => state.auth.passwordAgain)
     const dispatch = useDispatch()
+    const [errors, setErrors]: [string[], any] = useState([])
     return (
         <Panel>
             <div className={'d-flex flex-row justify-content-start'}>
@@ -81,14 +87,9 @@ export function SignupPanel() {
             </form>
             <button className="btn btn-primary m-2" disabled={!agree}
                     onClick={async () => {
-                        let errors = validateSignUpForm({login: login, password: password, passwordAgain: passwordAgain})
-                        if (errors.length > 0) {
-                            dispatch(updateSignUpValidationErrors(errors))
-                            return
-                        }
-                        const data = await makeSignUpRequest({login: login, password: password})
-                        console.log(data)
-                        dispatch(handleSignUpResponse(data))
+                        let errors = await validateSignUpForm({login: login, password: password, passwordAgain: passwordAgain})
+                        setErrors(errors)
+                        dispatch(setLocalIsAuth(errors.length === 0))
                     }}>Зарегистрироваться</button>
 
         </Panel>
