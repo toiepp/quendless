@@ -1,6 +1,7 @@
 package com.hyberlet.quendless.controller;
 
 import com.hyberlet.quendless.controller.exceptions.BadRequestException;
+import com.hyberlet.quendless.model.ServerMessage;
 import com.hyberlet.quendless.model.User;
 import com.hyberlet.quendless.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,15 +36,15 @@ public class UserController {
     )
     @PostMapping("/users/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public String registration(@RequestBody User user) {
+    public ServerMessage registration(@RequestBody User user) {
         if (user == null)
-            throw new BadRequestException("user not presented");
+            throw new BadRequestException("User not presented");
         System.out.println(user);
         System.out.println("Name: '" + user.getLogin() + "' Password: '" + user.getPassword() + "'");
         if (Objects.equals(user.getLogin(), ""))
-            throw new BadRequestException("user has empty login");
+            throw new BadRequestException("User has empty login");
         userService.createUser(user);
-        return "ok";
+        return new ServerMessage("Ok");
     }
 
     @Operation(

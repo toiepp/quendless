@@ -16,7 +16,7 @@ public class AuthFailureHandler extends SimpleUrlAuthenticationFailureHandler {
                                         AuthenticationException exception) throws IOException {
         response.setContentType("application/json;charset=UTF-8");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.getWriter().write("проверьте логин и пароль");
+        response.getWriter().write("{\"message\": \"Check login and password\"}");
         response.getWriter().flush();
         response.getWriter().close();
     }

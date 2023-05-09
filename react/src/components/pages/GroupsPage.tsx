@@ -1,29 +1,36 @@
 import {ContentWrapper} from "../primitives/ContentWrapper";
 import {Panel} from "../primitives/Panel";
-import {Group, GroupCard} from "../cards/GroupCard";
+import {Group} from "../../types";
+import {useEffect, useState} from "react";
+import makeRequest from "../../requests/base";
+import {GroupCardList} from "../card_lists/GroupCardList";
 
-function getGroups(): Group[] {
-    return [
-        {
-            "name": "IKBO-01-20"
-        },
-        {
-            "name": "IPPO"
-        }
-    ]
+async function getGroups(): Promise<Group[]> {
+    const data = await makeRequest({
+        relativeUrl: "/groups",
+        method: "get"
+    })
+    console.log(data)
+    return data as Group[]
 }
 
 export function GroupsPage() {
-    const groupCards = getGroups().map((group) => <GroupCard group={group}/>)
+    const [groups, setGroups]: [Group[], any] = useState([])
+    useEffect(() => {
+        const interval = setInterval(() => {
+            getGroups().then((groups) => setGroups(groups));
+        }, 1000);
+
+        return () => {
+            console.log(`clearing interval`);
+            clearInterval(interval);
+        };
+    }, [])
     return (
         <ContentWrapper>
             <Panel>
                 <h2>Groups</h2>
-                {groupCards.map((groupCard) => (
-                    <div>
-                        {groupCard}
-                    </div>
-                ))}
+                <GroupCardList groups={groups}/>
             </Panel>
         </ContentWrapper>
     )

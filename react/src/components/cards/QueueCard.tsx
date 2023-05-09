@@ -1,11 +1,6 @@
 import {Card} from "../primitives/Card";
 import {CardRow} from "../primitives/CardRow";
-
-export type Queue = {
-    name: string,
-    startDate?: Date,
-    endDate?: Date,
-}
+import {Queue} from "../../types";
 
 export function QueueCard({queue}: {queue: Queue}) {
     const started = (queue.startDate !== null && queue.startDate !== undefined ? <CardRow>Started at {queue.startDate}</CardRow> : <></>)

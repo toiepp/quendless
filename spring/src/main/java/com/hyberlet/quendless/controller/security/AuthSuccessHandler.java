@@ -23,8 +23,9 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
 
     protected void handle(HttpServletRequest request, HttpServletResponse response,
                           Authentication authentication) throws IOException {
+        response.setContentType("application/json;charset=UTF-8");
         response.setStatus(HttpStatus.OK.value());
-        response.getWriter().write("ok");
+        response.getWriter().write("{\"message\": \"Ok\"}");
         response.getWriter().flush();
         response.getWriter().close();
     }

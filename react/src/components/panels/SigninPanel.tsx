@@ -1,11 +1,34 @@
 import {Panel} from "../primitives/Panel";
 import {useDispatch, useSelector} from "react-redux";
 import {
+    handleSignInResponse,
     switchToSignUp,
     updateLogin,
-    updatePassword,
-    validateSignInForm,
+    updatePassword, updateSignInValidationErrors,
 } from "../../store/slices/authSlice";
+import {} from "../../requests/auth";
+import {ServerMessage, User} from "../../types";
+import makeRequest from "../../requests/base";
+
+async function makeSignInRequest(user: User): Promise<ServerMessage> {
+    const formBody = Object.keys(user).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(user[key])).join('&');
+    const data = await makeRequest({
+        relativeUrl: '/users/login',
+        method: 'post',
+        body: formBody,
+        contentType: 'application/x-www-form-urlencoded'
+    })
+    return data as ServerMessage
+}
+
+function validateSignInForm({login, password}: User): string[] {
+    const errors = []
+    if (login === '')
+        errors.push('Поле "Логин" пустое')
+    if (password === '')
+        errors.push('Поле "Пароль" пустое')
+    return errors
+}
 
 export function SigninPanel () {
     const login = useSelector((state: any) => state.auth.login)
@@ -34,7 +57,16 @@ export function SigninPanel () {
                     {errors.length !== 0 && errors.map((error: string, index: number) => <p className={'text-danger'} key={index}>{error}</p>)}
                 </form>
                 <button className="btn btn-primary m-2"
-                        onClick={() => dispatch(validateSignInForm())}>Войти</button>
+                        onClick={async () => {
+                            let errors = validateSignInForm({login: login, password: password})
+                            if (errors.length > 0) {
+                                dispatch(updateSignInValidationErrors(errors))
+                                return
+                            }
+                            const data = await makeSignInRequest({login: login, password: password})
+                            console.log(data)
+                            dispatch(handleSignInResponse(data))
+                        }}>Войти</button>
             </Panel>
     );
 }

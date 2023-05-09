@@ -1,10 +1,6 @@
 import {Card} from "../primitives/Card";
 import {CardRow} from "../primitives/CardRow";
-
-export type Group = {
-    name: string,
-    description?: string,
-}
+import {Group} from "../../types";
 
 export function GroupCard({group}: {group: Group}) {
     return (

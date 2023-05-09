@@ -37,8 +37,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(
                         "/users/login",
-                        "/users/register",
-                        "/users", "/v3/api-docs",
+                        "/users/register", "/users/logout",
+                        "/users", "/users/me", "/v3/api-docs",
                         "/swagger_ui/*", "/swagger_ui").permitAll()
                 .anyRequest().authenticated()
                 .and()
@@ -58,6 +58,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .logout()
                 .logoutUrl("/users/logout")
+//                .logoutSuccessHandler()
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID");
     }

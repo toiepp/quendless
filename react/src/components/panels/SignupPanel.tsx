@@ -2,12 +2,42 @@ import {Panel} from "../primitives/Panel";
 import {NavLink} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {
+    handleSignUpResponse,
     switchToSignIn,
     toggleAgree,
     updateLogin,
     updatePassword,
-    updatePasswordAgain, validateSignUpForm,
+    updatePasswordAgain,
+    updateSignUpValidationErrors,
 } from "../../store/slices/authSlice";
+import {ServerMessage, User} from "../../types";
+import makeRequest from "../../requests/base";
+
+async function makeSignUpRequest(user: User): Promise<ServerMessage> {
+    const data = await makeRequest({
+        relativeUrl: '/users/register',
+        method: 'post',
+        body: JSON.stringify(user)
+    })
+    return data as ServerMessage
+}
+
+interface SignUpForm {
+    login: string,
+    password: string,
+    passwordAgain: string
+}
+
+function validateSignUpForm({login, password, passwordAgain}: SignUpForm): string[] {
+    const errors = []
+    if (login === '')
+        errors.push('Поле "Логин" пустое')
+    if (password === '')
+        errors.push('Поле "Пароль" пустое')
+    if (password !== passwordAgain)
+        errors.push('Пароли не совпадают')
+    return errors
+}
 
 export function SignupPanel() {
     const agree: boolean = useSelector((state: any) => state.auth.agree)
@@ -50,7 +80,16 @@ export function SignupPanel() {
                 {errors.length !== 0 && errors.map((error: string, index: number) => <p className={'text-danger'} key={index}>{error}</p>)}
             </form>
             <button className="btn btn-primary m-2" disabled={!agree}
-                    onClick={() => dispatch(validateSignUpForm())}>Зарегистрироваться</button>
+                    onClick={async () => {
+                        let errors = validateSignUpForm({login: login, password: password, passwordAgain: passwordAgain})
+                        if (errors.length > 0) {
+                            dispatch(updateSignUpValidationErrors(errors))
+                            return
+                        }
+                        const data = await makeSignUpRequest({login: login, password: password})
+                        console.log(data)
+                        dispatch(handleSignUpResponse(data))
+                    }}>Зарегистрироваться</button>
 
         </Panel>
     );

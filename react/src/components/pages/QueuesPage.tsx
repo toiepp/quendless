@@ -1,6 +1,7 @@
 import {Panel} from "../primitives/Panel";
-import {Queue, QueueCard} from "../cards/QueueCard";
 import {ContentWrapper} from "../primitives/ContentWrapper";
+import {QueueCardList} from "../card_lists/QueueCardList";
+import {Queue} from "../../types";
 
 function getQueues(): Queue[] {
     return [
@@ -14,16 +15,11 @@ function getQueues(): Queue[] {
 }
 
 export function QueuesPage() {
-    const queueCards = getQueues().map((queue) => <QueueCard queue={queue}/>)
     return (
         <ContentWrapper>
             <Panel>
                 <h2>Queues</h2>
-                {queueCards.map((queueCard) => (
-                    <div>
-                        {queueCard}
-                    </div>
-                ))}
+                <QueueCardList queues={getQueues()}/>
             </Panel>
         </ContentWrapper>
     );

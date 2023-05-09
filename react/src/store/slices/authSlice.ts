@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+import {ServerMessage} from "../../types";
 
 const errors: string[] = []
 
@@ -16,31 +17,36 @@ export const authSlice = createSlice({
     reducers: {
         switchToSignUp: (state) => {
             state.mode = 'signUp'
+            state.errors.length = 0
         },
         switchToSignIn: (state) => {
             state.mode = 'signIn'
+            state.errors.length = 0
         },
         toggleAgree: (state) => {
             state.agree = !state.agree
         },
-        validateSignUpForm: (state) => {
-            state.errors.length = 0
-            if (state.login === '')
-                state.errors.push('Поле "Логин" пустое')
-            if (state.password === '')
-                state.errors.push('Поле "Пароль" пустое')
-            if (state.password !== state.passwordAgain)
-                state.errors.push('Пароли не совпадают')
-            state.isAuth = true;
+        updateSignUpValidationErrors: (state, {payload}: {payload: string[]}) => {
+            state.errors = payload;
         },
-        validateSignInForm: (state) => {
-            state.errors.length = 0
-            if (state.login === '')
-                state.errors.push('Поле "Логин" пустое')
-            if (state.password === '')
-                state.errors.push('Поле "Пароль" пустое')
-            // TODO: add server query
-            state.isAuth = true;
+        updateSignInValidationErrors: (state, {payload}: {payload: string[]}) => {
+            state.errors = payload;
+        },
+        handleSignInResponse: (state, action: {payload: ServerMessage}) => {
+            if (action.payload.message === 'Ok') {
+                state.isAuth = true;
+            } else {
+                state.errors.length = 0
+                state.errors.push(action.payload.message)
+            }
+        },
+        handleSignUpResponse: (state, action: {payload: ServerMessage}) => {
+            if (action.payload.message === 'Ok') {
+                state.isAuth = true;
+            } else {
+                state.errors.length = 0
+                state.errors.push(action.payload.message)
+            }
         },
         updateLogin: (state, action: {payload: string}) => {
             state.login = action.payload
@@ -53,12 +59,16 @@ export const authSlice = createSlice({
         },
         logout: (state) => {
             state.isAuth = false
+        },
+        setLocalIsAuth: (state, action: {payload: boolean}) => {
+            state.isAuth = action.payload
         }
     },
 })
 
 // Action creators are generated for each case reducer function
 export const {
-    switchToSignUp, switchToSignIn, toggleAgree, updateLogin, updatePassword, updatePasswordAgain, validateSignUpForm,
-    validateSignInForm, logout
+    switchToSignUp, switchToSignIn, toggleAgree, updateLogin, updatePassword, updatePasswordAgain, logout,
+    handleSignUpResponse, handleSignInResponse, updateSignUpValidationErrors, updateSignInValidationErrors,
+    setLocalIsAuth
 } = authSlice.actions
