@@ -4,18 +4,18 @@ services:
   postgres:
     image: 'postgres:15.2-alpine'
     environment:
-    - DB_NAME=quendless
-    - PGDATA=/var/lib/postgresql/data/quendless
-    - POSTGRES_PASSWORD=123456
+      - DB_NAME=quendless
+      - PGDATA=/var/lib/postgresql/data/quendless
+      - POSTGRES_PASSWORD=123456
     ports:
-    - '5431:5432'
+      - '5431:5432'
     restart: always
     volumes:
-    - ./postgres:/docker-entrypoint-initdb.d:ro
+      - ./postgres:/docker-entrypoint-initdb.d:ro
 
   spring:
     container_name: quendless_spring
-    build: ./spring
+    image: penzastreet/quendless_spring:0.1
     ports:
       - "8080:8080"
     restart: always
@@ -26,7 +26,7 @@ services:
 
   react:
     container_name: quendless_react
-    build: ./react
+    image: penzastreet/quendless_react:0.1
     ports:
       - "3000:3000"
     restart: always
