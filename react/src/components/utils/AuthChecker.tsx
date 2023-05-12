@@ -9,6 +9,7 @@ export function AuthChecker() {
 
     function checkCurrentUser() {
         getCurrentUser().then((response) => {
+            console.log(response)
             dispatch(setLocalIsAuth(response.login !== 'anonymousUser'))
             dispatch(setDisplayLogin(response.login))
         })

@@ -1,4 +1,5 @@
-export const serverUrl = "http://localhost:8080"
+// export const serverUrl = "http://localhost:8080"
+export const serverUrl = "http://84.201.153.208:8080"
 
 interface RequestInfo {
     relativeUrl: string,
@@ -29,6 +30,7 @@ async function makeRequest({relativeUrl, method, body = null, contentType = "app
             console.log(data)
             return data
         })
+        .catch((error) => console.log(error))
 }
 
 export default makeRequest;
