@@ -1,12 +1,19 @@
 import makeRequest from "./base";
 import {User} from "../types";
 
-export async function checkAuth(): Promise<boolean> {
+interface ServerUser {
+    userId?: any,
+    name?: any,
+    login: string,
+    password?: any,
+}
+
+export async function getCurrentUser(): Promise<ServerUser> {
     const data: User = await makeRequest({
         relativeUrl: '/users/me',
         method: 'get',
     })
-    return data.login !== 'anonymousUser';
+    return data as ServerUser;
 }
 
 export async function logout() {

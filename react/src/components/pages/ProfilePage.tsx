@@ -2,15 +2,15 @@ import {Panel} from "../primitives/Panel";
 import {ProfileCard} from "../cards/ProfileCard";
 import defaultIcon from "../../res/images/user_icon.png"
 import {ContentWrapper} from "../primitives/ContentWrapper";
+import {useDispatch, useSelector} from "react-redux";
 
 export function ProfilePage() {
+    const displayLogin = useSelector((state: any) => state.auth.displayLogin)
     return (
         <ContentWrapper>
             <Panel>
                 <ProfileCard profile={{
-                    name: "Pavel Solomatin",
-                    login: "hyberlet",
-                    email: "crave_ozer_man@mail.ru",
+                    login: displayLogin,
                     imageUrl: defaultIcon
                 }}/>
             </Panel>

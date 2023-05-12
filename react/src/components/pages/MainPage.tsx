@@ -10,7 +10,7 @@ export function MainPage(props: any) {
                 <p>Приложение для организации очередей</p>
                 <p>Создавайте очереди, приглашайте товарищей по несчастью и следите за движением к цели</p>
                 <button className="btn btn-sm btn-outline-primary col-2 p-1 m-3 bg-opacity-75 bg-light">
-                    <NavLink to='/profile'>Хочу попробовать</NavLink>
+                    <NavLink to='/auth'>Хочу попробовать</NavLink>
                 </button>
             </div>
         </div>

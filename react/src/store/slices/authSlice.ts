@@ -9,7 +9,8 @@ export const authSlice = createSlice({
         login: '',
         password: '',
         passwordAgain: '',
-        localIsAuth: false
+        localIsAuth: false,
+        displayLogin: ''
     },
     reducers: {
         switchToSignUp: (state) => {
@@ -32,6 +33,9 @@ export const authSlice = createSlice({
         },
         setLocalIsAuth: (state, action: {payload: boolean}) => {
             state.localIsAuth = action.payload
+        },
+        setDisplayLogin: (state, action: {payload: string}) => {
+            state.displayLogin = action.payload
         }
     },
 })
@@ -39,5 +43,5 @@ export const authSlice = createSlice({
 // Action creators are generated for each case reducer function
 export const {
     switchToSignUp, switchToSignIn, toggleAgree, updateLogin, updatePassword, updatePasswordAgain,
-    setLocalIsAuth
+    setLocalIsAuth, setDisplayLogin
 } = authSlice.actions

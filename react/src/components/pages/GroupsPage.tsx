@@ -4,6 +4,7 @@ import {Group} from "../../types";
 import {useEffect, useState} from "react";
 import makeRequest from "../../requests/base";
 import {GroupCardList} from "../card_lists/GroupCardList";
+import {GroupCreatingForm} from "../creating_forms/GroupCreatingForm";
 
 async function getGroups(): Promise<Group[]> {
     const data = await makeRequest({
@@ -30,6 +31,7 @@ export function GroupsPage() {
         <ContentWrapper>
             <Panel>
                 <h2>Groups</h2>
+                <GroupCreatingForm/>
                 <GroupCardList groups={groups}/>
             </Panel>
         </ContentWrapper>

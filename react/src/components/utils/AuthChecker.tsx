@@ -1,21 +1,24 @@
 import {useDispatch} from "react-redux";
 import {useEffect} from "react";
-import {checkAuth} from "../../requests/auth";
-import {setLocalIsAuth} from "../../store/slices/authSlice";
+import {getCurrentUser} from "../../requests/auth";
+import {setDisplayLogin, setLocalIsAuth} from "../../store/slices/authSlice";
 
 
 export function AuthChecker() {
     const dispatch = useDispatch()
-    checkAuth().then((response) => {
-        dispatch(setLocalIsAuth(response))
-    })
-    console.log('AuthCheck')
+
+    function checkCurrentUser() {
+        getCurrentUser().then((response) => {
+            dispatch(setLocalIsAuth(response.login !== 'anonymousUser'))
+            dispatch(setDisplayLogin(response.login))
+        })
+        console.log('AuthCheck')
+    }
+
+    checkCurrentUser()
     useEffect(() => {
         const interval = setInterval(() => {
-            checkAuth().then((response) => {
-                dispatch(setLocalIsAuth(response))
-            })
-            console.log('AuthCheck')
+            checkCurrentUser()
         }, 60000);
         return () => {
             clearInterval(interval);

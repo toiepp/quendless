@@ -7,8 +7,7 @@ import {logout} from "../../requests/auth";
 export function LogoutPage() {
     const dispatch = useDispatch()
     useEffect(() => {
-        logout().then()
-        dispatch(setLocalIsAuth(false))
+        logout().then(() => dispatch(setLocalIsAuth(false)))
     })
 
     return (
