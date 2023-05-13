@@ -1,7 +1,8 @@
 interface Group {
-    groupId: string,
+    groupId?: string,
     name: string,
     description?: string,
+    canEdit?: boolean
 }
 
 interface User {
@@ -21,4 +22,8 @@ interface Queue {
     endDate?: Date,
 }
 
-export type { Group, User, ServerMessage, Queue };
+interface CardViewSettings {
+    editable: boolean
+}
+
+export type { Group, User, ServerMessage, Queue, CardViewSettings };

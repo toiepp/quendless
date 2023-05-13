@@ -32,7 +32,7 @@ export function GroupsPage() {
             <Panel>
                 <h2>Groups</h2>
                 <GroupCreatingForm/>
-                <GroupCardList groups={groups}/>
+                <GroupCardList groups={groups} view={{editable: true}}/>
             </Panel>
         </ContentWrapper>
     )

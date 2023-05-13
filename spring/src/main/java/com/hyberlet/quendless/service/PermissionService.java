@@ -34,6 +34,8 @@ public class PermissionService {
 
     @LoggedAction
     public Boolean isModerator(User user, Group group) {
+        if (isAdmin(user))
+            return true;
         List<Permission> permissions = permissionRepository.getPermissionsByUser(
                 user,
                 "group",

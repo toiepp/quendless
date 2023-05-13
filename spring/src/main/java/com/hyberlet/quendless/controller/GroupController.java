@@ -5,6 +5,7 @@ import com.hyberlet.quendless.model.Group;
 import com.hyberlet.quendless.model.GroupMember;
 import com.hyberlet.quendless.model.Queue;
 import com.hyberlet.quendless.model.User;
+import com.hyberlet.quendless.model.dto.ServerMessage;
 import com.hyberlet.quendless.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,17 +99,26 @@ public class GroupController {
     )
     @PutMapping("/groups")
     public Group editGroup(@RequestBody Group group) {
-        // todo: implement
-        return null;
+        User user = userService.getCurrentUser();
+        if (permissionService.isModerator(user, group)) {
+            return groupService.editGroup(group);
+        }
+        return group;
     }
 
     @Operation (
             summary = "Удалить группу по id"
     )
     @DeleteMapping("/groups/{groupId}")
-    public String deleteGroup(@PathVariable UUID groupId) {
-        // todo: implement
-        return null;
+    public ServerMessage deleteGroup(@PathVariable UUID groupId) {
+        User user = userService.getCurrentUser();
+        Group group = groupService.getGroupById(groupId);
+        if (permissionService.isModerator(user, group)) {
+            groupMemberService.deleteGroupMembersOfGroup(groupId);
+            groupService.deleteGroup(groupId);
+            return new ServerMessage("Ok");
+        }
+        return new ServerMessage("Forbidden");
     }
 
     // TODO: переделать через заявки

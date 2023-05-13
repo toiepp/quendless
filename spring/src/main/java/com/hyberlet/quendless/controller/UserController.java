@@ -1,7 +1,7 @@
 package com.hyberlet.quendless.controller;
 
 import com.hyberlet.quendless.controller.exceptions.BadRequestException;
-import com.hyberlet.quendless.model.ServerMessage;
+import com.hyberlet.quendless.model.dto.ServerMessage;
 import com.hyberlet.quendless.model.User;
 import com.hyberlet.quendless.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;

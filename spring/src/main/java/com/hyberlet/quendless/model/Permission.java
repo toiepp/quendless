@@ -23,7 +23,7 @@ public class Permission {
     @Column(name = "permission_id", unique = true)
     private UUID permissionId;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @ToString.Exclude
     private User user;

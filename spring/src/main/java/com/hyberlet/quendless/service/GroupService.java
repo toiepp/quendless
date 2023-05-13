@@ -2,10 +2,8 @@ package com.hyberlet.quendless.service;
 
 import com.hyberlet.quendless.aspect.LoggedAction;
 import com.hyberlet.quendless.controller.exceptions.EntityNotFoundException;
-import com.hyberlet.quendless.model.Group;
-import com.hyberlet.quendless.model.GroupMember;
-import com.hyberlet.quendless.model.Permission;
-import com.hyberlet.quendless.model.User;
+import com.hyberlet.quendless.model.*;
+import com.hyberlet.quendless.model.dto.ServerMessage;
 import com.hyberlet.quendless.repository.GroupMemberRepository;
 import com.hyberlet.quendless.repository.GroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +16,9 @@ import java.util.UUID;
 
 @Service
 public class GroupService {
+
+    @Autowired
+    private GroupMemberService groupMemberService;
 
     @Autowired
     private GroupMemberRepository groupMemberRepository;
@@ -62,9 +63,12 @@ public class GroupService {
 
 
     @LoggedAction
-    public Group editGroup() {
-        // todo: realise
-        return null;
+    public Group editGroup(Group group) {
+        Group serverGroup = groupRepository.getById(group.getGroupId());
+        serverGroup.setName(group.getName());
+        serverGroup.setDescription(group.getDescription());
+        groupRepository.save(serverGroup);
+        return group;
     }
 
     @LoggedAction
@@ -88,8 +92,8 @@ public class GroupService {
     }
 
     @LoggedAction
-    public void deleteGroup(long group_id) {
-        // todo: realise
+    public void deleteGroup(UUID groupId) {
+        groupRepository.deleteById(groupId);
     }
 
 //    public String addUserToGroup(User user, Group group) {
@@ -100,12 +104,6 @@ public class GroupService {
     @LoggedAction
     public void addQueueToGroup(long queue_id, long group_id) {
         // todo: realise
-    }
-
-    @LoggedAction
-    public boolean isModer(User user, Group group) {
-        // todo: realise
-        return false;
     }
 
 }

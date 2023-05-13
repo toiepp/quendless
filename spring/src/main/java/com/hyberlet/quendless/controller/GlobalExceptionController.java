@@ -3,7 +3,7 @@ package com.hyberlet.quendless.controller;
 import com.hyberlet.quendless.controller.exceptions.AccessDeniedException;
 import com.hyberlet.quendless.controller.exceptions.BadRequestException;
 import com.hyberlet.quendless.controller.exceptions.EntityNotFoundException;
-import com.hyberlet.quendless.model.ServerMessage;
+import com.hyberlet.quendless.model.dto.ServerMessage;
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

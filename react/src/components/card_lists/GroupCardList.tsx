@@ -1,7 +1,7 @@
-import {Group} from "../../types";
+import {CardViewSettings, Group} from "../../types";
 import {GroupCard} from "../cards/GroupCard";
 
-export function GroupCardList({groups}: {groups: Group[]}) {
+export function GroupCardList({groups, view}: {groups: Group[], view: CardViewSettings}) {
     if (groups.length === 0)
         return (
             <>
@@ -11,7 +11,7 @@ export function GroupCardList({groups}: {groups: Group[]}) {
     return (
         <>
             {groups.map((group, index) => (
-                <GroupCard group={group} key={index}/>
+                <GroupCard group={group} view={view} key={index}/>
             ))}
         </>
     );

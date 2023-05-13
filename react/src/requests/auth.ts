@@ -16,8 +16,8 @@ export async function getCurrentUser(): Promise<ServerUser> {
     return data as ServerUser;
 }
 
-export async function logout() {
-    await makeRequest({
+export function logout() {
+    return makeRequest({
         relativeUrl: '/users/logout',
         method: 'get'
     })

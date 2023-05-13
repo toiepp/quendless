@@ -13,9 +13,9 @@ export const AuthUserRoutes = () => {
         <Routes>
             <Route path="/auth" element={<AuthPage/>}/>
             <Route path="/profile" element={<ProfilePage/>}/>
-            <Route path="/group/:group_id" element={<GroupPage/>}/>
+            <Route path={"/groups/:groupId"} element={<GroupPage/>}/>
             <Route path="/groups" element={<GroupsPage/>}/>
-            <Route path="/queue/:queue_id" element={<QueuePage/>}/>
+            <Route path={`/queue/:queueId`} element={<QueuePage/>}/>
             <Route path="/queues" element={<QueuesPage/>}/>
             <Route path="/logout" element={<LogoutPage/>}/>
             <Route path="/" element={<ProfilePage/>}/>

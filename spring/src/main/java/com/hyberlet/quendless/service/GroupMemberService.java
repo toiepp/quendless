@@ -5,8 +5,12 @@ import com.hyberlet.quendless.model.Group;
 import com.hyberlet.quendless.model.GroupMember;
 import com.hyberlet.quendless.model.User;
 import com.hyberlet.quendless.repository.GroupMemberRepository;
+import com.hyberlet.quendless.repository.GroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.UUID;
 
 @Service
 @LoggedAction
@@ -14,6 +18,9 @@ public class GroupMemberService {
 
     @Autowired
     private GroupMemberRepository groupMemberRepository;
+
+    @Autowired
+    private GroupRepository groupRepository;
     @Autowired
     private PermissionService permissionService;
 
@@ -30,6 +37,13 @@ public class GroupMemberService {
                 null
         );
         return groupMemberRepository.save(member);
+    }
+
+    @LoggedAction
+    public void deleteGroupMembersOfGroup(UUID groupId) {
+        Group group = groupRepository.getById(groupId);
+        List<GroupMember> members = groupMemberRepository.getGroupMembersByGroup(group);
+        groupMemberRepository.deleteAll(members);
     }
 
 }

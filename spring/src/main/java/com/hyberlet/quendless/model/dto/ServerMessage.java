@@ -1,4 +1,4 @@
-package com.hyberlet.quendless.model;
+package com.hyberlet.quendless.model.dto;
 
 import lombok.*;
 
