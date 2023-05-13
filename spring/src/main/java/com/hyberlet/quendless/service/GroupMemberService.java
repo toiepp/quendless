@@ -18,7 +18,6 @@ public class GroupMemberService {
 
     @Autowired
     private GroupMemberRepository groupMemberRepository;
-
     @Autowired
     private GroupRepository groupRepository;
     @Autowired
@@ -44,6 +43,18 @@ public class GroupMemberService {
         Group group = groupRepository.getById(groupId);
         List<GroupMember> members = groupMemberRepository.getGroupMembersByGroup(group);
         groupMemberRepository.deleteAll(members);
+    }
+
+    @LoggedAction
+    public void deleteGroupMember(User user, Group group) {
+        GroupMember member = groupMemberRepository.getGroupMemberByGroupAndUser(group, user);
+        groupMemberRepository.delete(member);
+    }
+
+    @LoggedAction
+    public Boolean isMember(User user, Group group) {
+        GroupMember members = groupMemberRepository.getGroupMemberByGroupAndUser(group, user);
+        return members != null;
     }
 
 }

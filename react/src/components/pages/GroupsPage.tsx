@@ -1,38 +1,17 @@
-import {ContentWrapper} from "../primitives/ContentWrapper";
-import {Panel} from "../primitives/Panel";
-import {Group} from "../../types";
-import {useEffect, useState} from "react";
-import makeRequest from "../../requests/base";
-import {GroupCardList} from "../card_lists/GroupCardList";
-import {GroupCreatingForm} from "../creating_forms/GroupCreatingForm";
-
-async function getGroups(): Promise<Group[]> {
-    const data = await makeRequest({
-        relativeUrl: "/groups",
-        method: "get"
-    })
-    console.log(data)
-    return data as Group[]
-}
+import {ContentWrapper} from '../primitives/ContentWrapper';
+import {Panel} from '../primitives/Panel';
+import {useSelector} from 'react-redux';
+import {UserGroupsPanel} from '../panels/UserGroupsPanel';
+import {GroupSearchPanel} from '../panels/GroupSearchPanel';
 
 export function GroupsPage() {
-    const [groups, setGroups]: [Group[], any] = useState([])
-    useEffect(() => {
-        const interval = setInterval(() => {
-            getGroups().then((groups) => setGroups(groups));
-        }, 1000);
+    const search = useSelector((state: any) => state.group.search)
 
-        return () => {
-            console.log(`clearing interval`);
-            clearInterval(interval);
-        };
-    }, [])
     return (
         <ContentWrapper>
             <Panel>
-                <h2>Groups</h2>
-                <GroupCreatingForm/>
-                <GroupCardList groups={groups} view={{editable: true}}/>
+                <h2>Группы</h2>
+                {search.enabled ? <GroupSearchPanel/> : <UserGroupsPanel/>}
             </Panel>
         </ContentWrapper>
     )

@@ -1,11 +1,11 @@
-import {QueueCard} from "../cards/QueueCard";
-import {Queue} from "../../types";
+import {QueueCard} from '../cards/QueueCard';
+import {Queue} from '../../types';
 
 export function QueueCardList({queues}: {queues: Queue[]}) {
     if (queues.length === 0)
         return (
             <>
-                <p>Список групп пуст. Создайте новую или вступите в существующую</p>
+                <p>Список очередей пуст.</p>
             </>
         )
     return (

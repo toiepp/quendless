@@ -1,5 +1,5 @@
-export const serverUrl = "http://localhost:8080"
-// export const serverUrl = "http://84.201.153.208:8080"
+export const serverUrl = 'http://localhost:8080'
+// export const serverUrl = 'http://84.201.153.208:8080'
 
 interface RequestInfo {
     relativeUrl: string,
@@ -8,10 +8,10 @@ interface RequestInfo {
     contentType?: string,
 }
 
-async function makeRequest({relativeUrl, method, body = null, contentType = "application/json"}: RequestInfo): Promise<any> {
+async function makeRequest({relativeUrl, method, body = null, contentType = 'application/json'}: RequestInfo): Promise<any> {
     let init: object = {
         method: method,
-        credentials: "include"
+        credentials: 'include'
     }
     if (body !== null) {
         init = {

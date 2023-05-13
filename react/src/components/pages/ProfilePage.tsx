@@ -1,8 +1,8 @@
-import {Panel} from "../primitives/Panel";
-import {ProfileCard} from "../cards/ProfileCard";
-import defaultIcon from "../../res/images/user_icon.png"
-import {ContentWrapper} from "../primitives/ContentWrapper";
-import {useDispatch, useSelector} from "react-redux";
+import {Panel} from '../primitives/Panel';
+import {ProfileCard} from '../cards/ProfileCard';
+import defaultIcon from '../../res/images/user_icon.png'
+import {ContentWrapper} from '../primitives/ContentWrapper';
+import {useSelector} from 'react-redux';
 
 export function ProfilePage() {
     const displayLogin = useSelector((state: any) => state.auth.displayLogin)

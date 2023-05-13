@@ -1,7 +1,7 @@
-import {SignupPanel} from "../panels/SignupPanel";
-import {SigninPanel} from "../panels/SigninPanel";
-import {useSelector} from "react-redux";
-import {Navigate} from "react-router-dom";
+import {SignupPanel} from '../panels/SignupPanel';
+import {SigninPanel} from '../panels/SigninPanel';
+import {useSelector} from 'react-redux';
+import {Navigate} from 'react-router-dom';
 
 export function AuthPage() {
     const mode = useSelector((state: any) => state.auth.mode)

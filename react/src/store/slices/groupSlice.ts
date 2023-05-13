@@ -1,8 +1,12 @@
-import {createSlice} from "@reduxjs/toolkit";
+import {createSlice} from '@reduxjs/toolkit';
 
 export const groupSlice = createSlice({
     name: 'group',
     initialState: {
+        search: {
+            enabled: false,
+            template: '',
+        },
         create: {
             enabled: false,
             name: '',
@@ -20,6 +24,9 @@ export const groupSlice = createSlice({
         },
     },
     reducers: {
+        setSearchMode: (state, action: {payload: boolean}) => {
+            state.search.enabled = action.payload
+        },
         setCreateMode: (state, action: {payload: boolean}) => {
             state.create.enabled = action.payload
         },
@@ -46,6 +53,9 @@ export const groupSlice = createSlice({
         },
         setRemoveGroupId: (state, action: {payload: string}) => {
             state.remove.groupId = action.payload
+        },
+        setSearchTemplate: (state, action: {payload: string}) => {
+            state.search.template = action.payload
         }
     },
 })
@@ -53,5 +63,6 @@ export const groupSlice = createSlice({
 // Action creators are generated for each case reducer function
 export const {
     setCreateMode, setEditMode, setCreateGroupName, setCreateGroupDescription,
-    setEditGroupName, setEditGroupDescription, setEditGroupId, setRemoveMode, setRemoveGroupId
+    setEditGroupName, setEditGroupDescription, setEditGroupId, setRemoveMode, setRemoveGroupId,
+    setSearchTemplate, setSearchMode
 } = groupSlice.actions

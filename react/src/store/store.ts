@@ -1,6 +1,6 @@
 import {combineReducers, legacy_createStore as createStore} from '@reduxjs/toolkit'
-import {authSlice} from "./slices/authSlice";
-import {groupSlice} from "./slices/groupSlice";
+import {authSlice} from './slices/authSlice';
+import {groupSlice} from './slices/groupSlice';
 
 const saveToLocalStorage = (state: any) => {
     try {

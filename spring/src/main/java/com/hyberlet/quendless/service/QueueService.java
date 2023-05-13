@@ -43,8 +43,7 @@ public class QueueService {
     @LoggedAction
     public Queue createQueue(Queue queue) {
         System.out.println(queue);
-        Queue createdQueue = queueRepository.save(queue);
-        return createdQueue;
+        return queueRepository.save(queue);
     }
 
     @LoggedAction
@@ -70,32 +69,6 @@ public class QueueService {
             user.ifPresent(users::add);
         }
         return users;
-    }
-
-    @LoggedAction
-    public QueueMember insertUserInQueue(User user, Queue queue) {
-        QueueMember member = queueMemberRepository.getQueueMembersByQueueAndUser(queue, user);
-        if (member != null)
-            return null;
-
-        QueueMember queueMember = new QueueMember();
-        queueMember.setUser(user);
-        queueMember.setQueue(queue);
-        List<QueueMember> queueMembers = queueMemberRepository.getQueueMembersByQueueOrderByPositionAsc(queue);
-        int position;
-        if (queueMembers.isEmpty())
-            position = 1;
-        else
-            position = queueMembers.get(queueMembers.size() - 1).getPosition() + 1;
-        queueMember.setPosition(position);
-        return queueMemberRepository.save(queueMember);
-    }
-
-    @LoggedAction
-    public QueueMember removeUserFromQueue(User user, Queue queue) {
-        QueueMember member = queueMemberRepository.getQueueMembersByQueueAndUser(queue, user);
-        queueMemberRepository.delete(member);
-        return member;
     }
 
     @LoggedAction

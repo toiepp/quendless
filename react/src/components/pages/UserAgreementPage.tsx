@@ -1,4 +1,4 @@
-import {Panel} from "../primitives/Panel";
+import {Panel} from '../primitives/Panel';
 
 export function UserAgreementPage() {
     return (

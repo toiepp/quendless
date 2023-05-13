@@ -5,6 +5,7 @@ import com.hyberlet.quendless.model.Group;
 import com.hyberlet.quendless.model.GroupMember;
 import com.hyberlet.quendless.model.Queue;
 import com.hyberlet.quendless.model.User;
+import com.hyberlet.quendless.model.dto.GroupDto;
 import com.hyberlet.quendless.model.dto.ServerMessage;
 import com.hyberlet.quendless.service.*;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,7 +34,7 @@ public class GroupController {
             summary = "Получить группы.",
             description = "Возвращает список групп, которых состоит пользователь. Если указан шаблон, ищет среди всех групп по шаблону названия.")
     @GetMapping("/groups")
-    public List<Group> getGroups(@RequestParam Optional<String> template) {
+    public List<GroupDto> getGroups(@RequestParam Optional<String> template) {
         List<Group> groups;
         if (template.isPresent()) {
             groups = groupService.findGroupsByNameTemplate(template.get());
@@ -41,7 +42,7 @@ public class GroupController {
             User user = userService.getCurrentUser();
             groups = groupService.getUserGroups(user);
         }
-        return groups;
+        return groupService.toDto(groups);
     }
 
     @Operation(
@@ -49,11 +50,11 @@ public class GroupController {
             description = "Если не существует - NotFound. Пользователь должен в ней состоять, иначе - Forbidden."
     )
     @GetMapping("/groups/{groupId}")
-    public Group getGroup(@PathVariable UUID groupId) {
+    public GroupDto getGroup(@PathVariable UUID groupId) {
         Group group = groupService.getGroupById(groupId);
         User user = userService.getCurrentUser();
         if (groupService.getUserGroups(user).contains(group))
-            return group;
+            return groupService.toDto(group, user);
         throw new AccessDeniedException("access denied");
     }
 
@@ -87,23 +88,23 @@ public class GroupController {
             description = "Создатель группы автоматически получает права модератора бессрочно"
     )
     @PostMapping("/groups")
-    public Group createGroup(@RequestBody Group group) {
+    public GroupDto createGroup(@RequestBody Group group) {
         User creator = userService.getCurrentUser();
         Group createdGroup = groupService.createGroup(group);
         groupMemberService.createGroupMember(createdGroup, creator);
-        return createdGroup;
+        return groupService.toDto(createdGroup);
     }
 
     @Operation(
             summary = "Редактировать поля группы"
     )
     @PutMapping("/groups")
-    public Group editGroup(@RequestBody Group group) {
+    public GroupDto editGroup(@RequestBody Group group) {
         User user = userService.getCurrentUser();
         if (permissionService.isModerator(user, group)) {
-            return groupService.editGroup(group);
+            return groupService.toDto(groupService.editGroup(group));
         }
-        return group;
+        return groupService.toDto(group);
     }
 
     @Operation (
@@ -131,6 +132,18 @@ public class GroupController {
         User user = userService.getCurrentUser();
         Group group = groupService.getGroupById(groupId);
         return groupMemberService.createGroupMember(group, user);
+    }
+
+    @Operation(
+            summary = "Выйти из группу по id",
+            description = "Если группа не существует - NotFound. Также создает права члена группы."
+    )
+    @GetMapping("/groups/{groupId}/leave")
+    public ServerMessage leaveUserFromGroup(@PathVariable UUID groupId) {
+        User user = userService.getCurrentUser();
+        Group group = groupService.getGroupById(groupId);
+        groupMemberService.deleteGroupMember(user, group);
+        return new ServerMessage("Ok");
     }
 
 

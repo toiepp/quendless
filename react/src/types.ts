@@ -2,7 +2,8 @@ interface Group {
     groupId?: string,
     name: string,
     description?: string,
-    canEdit?: boolean
+    membership?: boolean,
+    editable?: boolean,
 }
 
 interface User {
@@ -17,9 +18,13 @@ interface ServerMessage {
 }
 
 interface Queue {
+    queueId?: string,
     name: string,
+    description?: string
     startDate?: Date,
     endDate?: Date,
+    membership?: boolean,
+    editable?: boolean,
 }
 
 interface CardViewSettings {

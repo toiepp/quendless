@@ -1,5 +1,10 @@
 import {useDispatch, useSelector} from 'react-redux';
-import {setCreateGroupDescription, setCreateGroupName, setCreateMode} from '../../store/slices/groupSlice';
+import {
+    setCreateGroupDescription,
+    setCreateGroupName,
+    setCreateMode,
+    setSearchMode
+} from '../../store/slices/groupSlice';
 import {Group} from '../../types';
 import makeRequest from '../../requests/base';
 import {useState} from 'react';
@@ -22,12 +27,19 @@ async function makeCreateGroupRequest(group: Group): Promise<Group> {
 
 export function GroupCreatingForm() {
     const create = useSelector((state: any) => state.group.create);
+    const search = useSelector((state: any) => state.group.search)
     const dispatch = useDispatch()
     const [errors, setErrors]: [string[], any] = useState([])
     if (!create.enabled) {
         return (
             <>
-                <button className='btn btn-outline-primary m-1' onClick={() => dispatch(setCreateMode(true))}>Создать</button>
+                {
+                   !search.enabled &&
+                    <button className='btn btn-outline-primary m-1' onClick={() => {
+                        dispatch(setCreateMode(true))
+                        dispatch(setSearchMode(false))
+                    }}>Создать</button>
+                }
             </>
         )
     }

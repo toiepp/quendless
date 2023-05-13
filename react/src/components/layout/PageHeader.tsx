@@ -1,6 +1,6 @@
-import React from "react";
-import {NavLink} from "react-router-dom";
-import {HorizontalBar} from "../primitives/HorizontalBar";
+import React from 'react';
+import {NavLink} from 'react-router-dom';
+import {HorizontalBar} from '../primitives/HorizontalBar';
 
 type NavigationLink = {
     id: number,
@@ -20,23 +20,23 @@ export const authUserLinks: NavigationLink[] = [
     },
     {
         id: 1,
-        path: "/groups",
-        label: "Группы"
+        path: '/groups',
+        label: 'Группы'
     },
     {
         id: 2,
-        path: "/queues",
-        label: "Очереди"
+        path: '/queues',
+        label: 'Очереди'
     },
     {
         id: 3,
         path: '/profile',
-        label: "Профиль"
+        label: 'Профиль'
     },
     {
         id: 4,
         path: '/logout',
-        label: "Выйти"
+        label: 'Выйти'
     }
 ]
 
@@ -49,7 +49,7 @@ export const guestLinks: NavigationLink[] = [
     {
         id: 4,
         path: '/auth',
-        label: "Войти"
+        label: 'Войти'
     }
 ]
 

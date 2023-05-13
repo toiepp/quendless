@@ -3,7 +3,7 @@ package com.hyberlet.quendless.service;
 import com.hyberlet.quendless.aspect.LoggedAction;
 import com.hyberlet.quendless.controller.exceptions.EntityNotFoundException;
 import com.hyberlet.quendless.model.*;
-import com.hyberlet.quendless.model.dto.ServerMessage;
+import com.hyberlet.quendless.model.dto.GroupDto;
 import com.hyberlet.quendless.repository.GroupMemberRepository;
 import com.hyberlet.quendless.repository.GroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,6 +94,26 @@ public class GroupService {
     @LoggedAction
     public void deleteGroup(UUID groupId) {
         groupRepository.deleteById(groupId);
+    }
+
+    public List<GroupDto> toDto(List<Group> groups) {
+        User user = userService.getCurrentUser();
+        return groups.stream().map((group) -> toDto(group, user)).toList();
+    }
+
+    public GroupDto toDto(Group group, User user) {
+        return new GroupDto(
+                group.getGroupId(),
+                group.getName(),
+                group.getDescription(),
+                groupMemberService.isMember(user, group),
+                permissionService.isModerator(user, group)
+        );
+    }
+
+    public GroupDto toDto(Group group) {
+        User user = userService.getCurrentUser();
+        return toDto(group, user);
     }
 
 //    public String addUserToGroup(User user, Group group) {

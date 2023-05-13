@@ -1,7 +1,7 @@
-import {useDispatch} from "react-redux";
-import {useEffect} from "react";
-import {getCurrentUser} from "../../requests/auth";
-import {setDisplayLogin, setLocalIsAuth} from "../../store/slices/authSlice";
+import {useDispatch} from 'react-redux';
+import {useEffect} from 'react';
+import {getCurrentUser} from '../../requests/auth';
+import {setDisplayLogin, setLocalIsAuth} from '../../store/slices/authSlice';
 
 
 export function AuthChecker() {

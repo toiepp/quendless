@@ -1,6 +1,6 @@
-import {Panel} from "../primitives/Panel";
-import {NavLink} from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux";
+import {Panel} from '../primitives/Panel';
+import {NavLink} from 'react-router-dom';
+import {useDispatch, useSelector} from 'react-redux';
 import {
     setLocalIsAuth,
     switchToSignIn,
@@ -8,10 +8,10 @@ import {
     updateLogin,
     updatePassword,
     updatePasswordAgain,
-} from "../../store/slices/authSlice";
-import {ServerMessage, User} from "../../types";
-import makeRequest from "../../requests/base";
-import {useState} from "react";
+} from '../../store/slices/authSlice';
+import {ServerMessage, User} from '../../types';
+import makeRequest from '../../requests/base';
+import {useState} from 'react';
 
 async function makeSignUpRequest(user: User): Promise<ServerMessage> {
     const data = await makeRequest({
@@ -40,7 +40,7 @@ async function validateSignUpForm({login, password, passwordAgain}: SignUpForm):
         return errors
     const data = await makeSignUpRequest({login: login, password: password})
     console.log(data)
-    if (data.message !== "Ok")
+    if (data.message !== 'Ok')
         return [data.message]
     return []
 }
@@ -61,31 +61,31 @@ export function SignupPanel() {
                 </button>
             </div>
             <form>
-                <div className="form-group m-1">
-                    <label htmlFor="login">Логин</label>
-                    <input type="text" className="form-control" id="login" placeholder="Введите логин"
+                <div className='form-group m-1'>
+                    <label htmlFor='login'>Логин</label>
+                    <input type='text' className='form-control' id='login' placeholder='Введите логин'
                            value={login} onChange={(event) => dispatch(updateLogin(event.target.value))}/>
                 </div>
-                <div className="form-group m-1">
-                    <label htmlFor="sign_up_password">Пароль</label>
-                    <input type="password" className="form-control" id="sign_up_password" placeholder="Пароль"
+                <div className='form-group m-1'>
+                    <label htmlFor='sign_up_password'>Пароль</label>
+                    <input type='password' className='form-control' id='sign_up_password' placeholder='Пароль'
                            value={password} onChange={(event) => dispatch(updatePassword(event.target.value))}/>
                 </div>
-                <div className="form-group m-1">
-                    <label htmlFor="sign_up_password_again">Повторите пароль</label>
-                    <input type="password" className="form-control" id="sign_up_password_again"
-                           placeholder="Пароль ещё раз" value={passwordAgain} onChange={(event) => {dispatch(updatePasswordAgain(event.target.value))}}/>
+                <div className='form-group m-1'>
+                    <label htmlFor='sign_up_password_again'>Повторите пароль</label>
+                    <input type='password' className='form-control' id='sign_up_password_again'
+                           placeholder='Пароль ещё раз' value={passwordAgain} onChange={(event) => {dispatch(updatePasswordAgain(event.target.value))}}/>
                 </div>
-                <div className="form-check m-1">
-                    <input type="checkbox" className="form-check-input" id="agree" checked={agree} onChange={() => dispatch(toggleAgree())}/>
-                    <label className="form-check-label" htmlFor="agree">
+                <div className='form-check m-1'>
+                    <input type='checkbox' className='form-check-input' id='agree' checked={agree} onChange={() => dispatch(toggleAgree())}/>
+                    <label className='form-check-label' htmlFor='agree'>
                         Я прочитал и соглашаюсь с <NavLink to={'/user_agreement'}>Пользовательским
                         соглашением</NavLink>
                     </label>
                 </div>
                 {errors.length !== 0 && errors.map((error: string, index: number) => <p className={'text-danger'} key={index}>{error}</p>)}
             </form>
-            <button className="btn btn-primary m-2" disabled={!agree}
+            <button className='btn btn-primary m-2' disabled={!agree}
                     onClick={async () => {
                         let errors = await validateSignUpForm({login: login, password: password, passwordAgain: passwordAgain})
                         setErrors(errors)

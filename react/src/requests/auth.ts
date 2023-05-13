@@ -1,5 +1,5 @@
-import makeRequest from "./base";
-import {User} from "../types";
+import makeRequest from './base';
+import {User} from '../types';
 
 interface ServerUser {
     userId?: any,
