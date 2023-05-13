@@ -3,9 +3,10 @@ package com.hyberlet.quendless.controller;
 import com.hyberlet.quendless.controller.exceptions.AccessDeniedException;
 import com.hyberlet.quendless.model.Group;
 import com.hyberlet.quendless.model.GroupMember;
-import com.hyberlet.quendless.model.Queue;
 import com.hyberlet.quendless.model.User;
 import com.hyberlet.quendless.model.dto.GroupDto;
+import com.hyberlet.quendless.model.dto.GroupMemberDto;
+import com.hyberlet.quendless.model.dto.QueueDto;
 import com.hyberlet.quendless.model.dto.ServerMessage;
 import com.hyberlet.quendless.service.*;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,6 +30,8 @@ public class GroupController {
     private QueueService queueService;
     @Autowired
     private PermissionService permissionService;
+    @Autowired
+    private DtoService dtoService;
 
     @Operation(
             summary = "Получить группы.",
@@ -42,7 +45,7 @@ public class GroupController {
             User user = userService.getCurrentUser();
             groups = groupService.getUserGroups(user);
         }
-        return groupService.toDto(groups);
+        return dtoService.groupsToDto(groups);
     }
 
     @Operation(
@@ -53,8 +56,8 @@ public class GroupController {
     public GroupDto getGroup(@PathVariable UUID groupId) {
         Group group = groupService.getGroupById(groupId);
         User user = userService.getCurrentUser();
-        if (groupService.getUserGroups(user).contains(group))
-            return groupService.toDto(group, user);
+        if (groupMemberService.isMember(user, group))
+            return dtoService.groupToDto(group, user);
         throw new AccessDeniedException("access denied");
     }
 
@@ -63,11 +66,11 @@ public class GroupController {
             description = "Если группа не существует - NotFound. Пользователь должен состоять в этой группе, иначе - Forbidden."
     )
     @GetMapping("/groups/{groupId}/queues")
-    public List<Queue> getGroupQueues(@PathVariable UUID groupId) {
+    public List<QueueDto> getGroupQueues(@PathVariable UUID groupId) {
         Group group = groupService.getGroupById(groupId);
         User user = userService.getCurrentUser();
         if (groupService.getUserGroups(user).contains(group)) {
-            return queueService.getGroupQueues(group);
+            return dtoService.queuesToDto(queueService.getGroupQueues(group));
         }
         throw new AccessDeniedException("access denied");
 
@@ -77,10 +80,11 @@ public class GroupController {
             summary = "Получить список участников группы.",
             description = "Если группа не существует - NotFound. Пользователь должен состоять в этой группе, иначе - Forbidden."
     )
-    @GetMapping("/groups/{group_id}/members")
-    public List<User> getGroupMembers(@PathVariable UUID group_id) {
-        // TODO: implement
-        return null;
+    @GetMapping("/groups/{groupId}/members")
+    public List<GroupMemberDto> getGroupMembers(@PathVariable UUID groupId) {
+        Group group = groupService.getGroupById(groupId);
+        List<GroupMember> members = groupMemberService.getGroupMembers(group);
+        return dtoService.groupMembersToDto(members);
     }
 
     @Operation(
@@ -92,7 +96,7 @@ public class GroupController {
         User creator = userService.getCurrentUser();
         Group createdGroup = groupService.createGroup(group);
         groupMemberService.createGroupMember(createdGroup, creator);
-        return groupService.toDto(createdGroup);
+        return dtoService.groupToDto(createdGroup);
     }
 
     @Operation(
@@ -102,9 +106,9 @@ public class GroupController {
     public GroupDto editGroup(@RequestBody Group group) {
         User user = userService.getCurrentUser();
         if (permissionService.isModerator(user, group)) {
-            return groupService.toDto(groupService.editGroup(group));
+            return dtoService.groupToDto(groupService.editGroup(group));
         }
-        return groupService.toDto(group);
+        return dtoService.groupToDto(group);
     }
 
     @Operation (
@@ -115,30 +119,29 @@ public class GroupController {
         User user = userService.getCurrentUser();
         Group group = groupService.getGroupById(groupId);
         if (permissionService.isModerator(user, group)) {
-            groupMemberService.deleteGroupMembersOfGroup(groupId);
             groupService.deleteGroup(groupId);
             return new ServerMessage("Ok");
         }
         return new ServerMessage("Forbidden");
     }
 
-    // TODO: переделать через заявки
+    // todo: переделать через заявки
     @Operation(
             summary = "Вступить в группу по id",
             description = "Если группа не существует - NotFound. Также создает права члена группы."
     )
-    @GetMapping("/groups/{groupId}/join")
-    public GroupMember joinUserToGroup(@PathVariable UUID groupId) {
+    @PostMapping("/groups/{groupId}/join")
+    public GroupMemberDto joinUserToGroup(@PathVariable UUID groupId) {
         User user = userService.getCurrentUser();
         Group group = groupService.getGroupById(groupId);
-        return groupMemberService.createGroupMember(group, user);
+        return dtoService.toDto(groupMemberService.createGroupMember(group, user));
     }
 
     @Operation(
             summary = "Выйти из группу по id",
             description = "Если группа не существует - NotFound. Также создает права члена группы."
     )
-    @GetMapping("/groups/{groupId}/leave")
+    @PostMapping("/groups/{groupId}/leave")
     public ServerMessage leaveUserFromGroup(@PathVariable UUID groupId) {
         User user = userService.getCurrentUser();
         Group group = groupService.getGroupById(groupId);

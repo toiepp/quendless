@@ -2,10 +2,12 @@ package com.hyberlet.quendless.service;
 
 import com.hyberlet.quendless.aspect.LoggedAction;
 import com.hyberlet.quendless.controller.exceptions.EntityNotFoundException;
-import com.hyberlet.quendless.model.*;
+import com.hyberlet.quendless.model.Group;
+import com.hyberlet.quendless.model.Queue;
+import com.hyberlet.quendless.model.QueueMember;
+import com.hyberlet.quendless.model.User;
 import com.hyberlet.quendless.repository.QueueMemberRepository;
 import com.hyberlet.quendless.repository.QueueRepository;
-import com.hyberlet.quendless.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,13 +23,14 @@ public class QueueService {
     private QueueRepository queueRepository;
     @Autowired
     private QueueMemberRepository queueMemberRepository;
-    @Autowired
-    private UserService userService;
 
     @LoggedAction
-    public List<Queue> getAllQueues() {
-        // todo: implement
-        return null;
+    public List<Queue> getUserQueues(User user) {
+        List<QueueMember> queueMembers = queueMemberRepository.getQueueMemberByUser(user);
+        List<Queue> queues = new LinkedList<>();
+        for (var member: queueMembers)
+            queues.add(queueRepository.getById(member.getQueue().getQueueId()));
+        return queues;
     }
 
     @LoggedAction
@@ -42,33 +45,33 @@ public class QueueService {
 
     @LoggedAction
     public Queue createQueue(Queue queue) {
-        System.out.println(queue);
         return queueRepository.save(queue);
     }
 
     @LoggedAction
     public Queue editQueue(Queue queue) {
-        // todo: implement
-        return null;
+        Queue serverQueue = queueRepository.getById(queue.getQueueId());
+        serverQueue.setName(queue.getName());
+        serverQueue.setDescription(queue.getDescription());
+        serverQueue.setEventBegin(queue.getEventBegin());
+        serverQueue.setEventEnd(queue.getEventEnd());
+        queueRepository.save(serverQueue);
+        return serverQueue;
     }
 
     @LoggedAction
-    public void deleteQueue(long queue_id) {
-        // todo: implement
+    public void deleteQueue(Queue queue) {
+        List<QueueMember> members = queueMemberRepository.getQueueMemberByQueue(queue);
+        queueMemberRepository.deleteAll(members);
+        queueRepository.delete(queue);
     }
 
     @LoggedAction
-    public List<User> getQueueMembers(UUID queue_id) {
+    public List<QueueMember> getQueueMembers(UUID queue_id) {
         Optional<Queue> queue = queueRepository.findById(queue_id);
         if (queue.isEmpty())
             throw new EntityNotFoundException("queue does not exist " + queue_id);
-        List<QueueMember> queueMembers = queueMemberRepository.getQueueMembersByQueueOrderByPositionAsc(queue.get());
-        List<User> users = new LinkedList<>();
-        for (QueueMember member : queueMembers) {
-            Optional<User> user = userService.findUserById(member.getUser().getUserId());
-            user.ifPresent(users::add);
-        }
-        return users;
+        return queueMemberRepository.getQueueMembersByQueueOrderByPositionAsc(queue.get());
     }
 
     @LoggedAction

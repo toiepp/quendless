@@ -4,7 +4,6 @@ import com.hyberlet.quendless.aspect.LoggedAction;
 import com.hyberlet.quendless.model.Queue;
 import com.hyberlet.quendless.model.QueueMember;
 import com.hyberlet.quendless.model.User;
-import com.hyberlet.quendless.repository.GroupRepository;
 import com.hyberlet.quendless.repository.QueueMemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,12 +16,10 @@ public class QueueMemberService {
     @Autowired
     private QueueMemberRepository queueMemberRepository;
     @Autowired
-    private GroupRepository groupRepository;
-    @Autowired
     private PermissionService permissionService;
 
     @LoggedAction
-    public QueueMember insertUserInQueue(User user, Queue queue) {
+    public QueueMember createQueueMember(User user, Queue queue) {
         QueueMember member = queueMemberRepository.getQueueMembersByQueueAndUser(queue, user);
         if (member != null)
             return null;
@@ -41,9 +38,25 @@ public class QueueMemberService {
     }
 
     @LoggedAction
-    public QueueMember removeUserFromQueue(User user, Queue queue) {
+    public QueueMember getQueueMember(Queue queue, User user) {
+        return queueMemberRepository.getQueueMembersByQueueAndUser(queue, user);
+    }
+
+    @LoggedAction
+    public QueueMember deleteQueueMember(User user, Queue queue) {
         QueueMember member = queueMemberRepository.getQueueMembersByQueueAndUser(queue, user);
         queueMemberRepository.delete(member);
         return member;
+    }
+
+    @LoggedAction
+    public Boolean isQueueMember(User user, Queue queue) {
+        QueueMember member = queueMemberRepository.getQueueMembersByQueueAndUser(queue, user);
+        return member != null;
+    }
+
+    @LoggedAction
+    public Boolean isModerator(User user, Queue queue) {
+        return permissionService.isModerator(user, queue);
     }
 }

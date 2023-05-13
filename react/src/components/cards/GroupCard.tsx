@@ -36,14 +36,14 @@ async function makeEditGroupRequest(group: Group) {
 async function makeJoinGroupRequest(group: Group) {
     await makeRequest({
         relativeUrl: `/groups/${group.groupId}/join`,
-        method: 'get'
+        method: 'post'
     })
 }
 
 async function makeLeaveGroupRequest(group: Group) {
     await makeRequest({
         relativeUrl: `/groups/${group.groupId}/leave`,
-        method: 'get'
+        method: 'post'
     })
 }
 

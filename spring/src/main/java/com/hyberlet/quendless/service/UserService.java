@@ -36,7 +36,7 @@ public class UserService {
     }
 
     @LoggedAction
-    public String createUser(User user) {
+    public void createUser(User user) {
         User existing = userRepository.findUserByLogin(user.getLogin()).orElse(null);
         if (existing != null)
             throw new BadRequestException("User already exists");
@@ -45,7 +45,6 @@ public class UserService {
         if (Objects.equals(user.getLogin(), "admin")) {
             permissionService.createPermission(user, "all", null, "admin", null);
         }
-        return "ok";
     }
 
     public User getCurrentUser() {

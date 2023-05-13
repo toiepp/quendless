@@ -13,4 +13,6 @@ import java.util.UUID;
 public interface QueueMemberRepository extends JpaRepository<QueueMember, UUID> {
     List<QueueMember> getQueueMembersByQueueOrderByPositionAsc(Queue queue);
     QueueMember getQueueMembersByQueueAndUser(Queue queue, User user);
+    List<QueueMember> getQueueMemberByQueue(Queue queue);
+    List<QueueMember> getQueueMemberByUser(User user);
 }

@@ -2,8 +2,9 @@ package com.hyberlet.quendless.service;
 
 import com.hyberlet.quendless.aspect.LoggedAction;
 import com.hyberlet.quendless.controller.exceptions.EntityNotFoundException;
-import com.hyberlet.quendless.model.*;
-import com.hyberlet.quendless.model.dto.GroupDto;
+import com.hyberlet.quendless.model.Group;
+import com.hyberlet.quendless.model.GroupMember;
+import com.hyberlet.quendless.model.User;
 import com.hyberlet.quendless.repository.GroupMemberRepository;
 import com.hyberlet.quendless.repository.GroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +17,6 @@ import java.util.UUID;
 
 @Service
 public class GroupService {
-
-    @Autowired
-    private GroupMemberService groupMemberService;
 
     @Autowired
     private GroupMemberRepository groupMemberRepository;
@@ -39,7 +37,6 @@ public class GroupService {
     @LoggedAction
     public List<Group> getUserGroups(User user) {
         List<GroupMember> groupMembers = groupMemberRepository.getGroupMembersByUser(user);
-        System.out.println(groupMembers);
         List<Group> groups = new LinkedList<>();
         for (GroupMember member : groupMembers) {
             groups.add(groupRepository.getById(member.getGroup().getGroupId()));
@@ -93,27 +90,10 @@ public class GroupService {
 
     @LoggedAction
     public void deleteGroup(UUID groupId) {
+        Group group = groupRepository.getById(groupId);
+        List<GroupMember> members = groupMemberRepository.getGroupMembersByGroup(group);
+        groupMemberRepository.deleteAll(members);
         groupRepository.deleteById(groupId);
-    }
-
-    public List<GroupDto> toDto(List<Group> groups) {
-        User user = userService.getCurrentUser();
-        return groups.stream().map((group) -> toDto(group, user)).toList();
-    }
-
-    public GroupDto toDto(Group group, User user) {
-        return new GroupDto(
-                group.getGroupId(),
-                group.getName(),
-                group.getDescription(),
-                groupMemberService.isMember(user, group),
-                permissionService.isModerator(user, group)
-        );
-    }
-
-    public GroupDto toDto(Group group) {
-        User user = userService.getCurrentUser();
-        return toDto(group, user);
     }
 
 //    public String addUserToGroup(User user, Group group) {

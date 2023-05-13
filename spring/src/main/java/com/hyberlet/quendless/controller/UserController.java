@@ -1,8 +1,10 @@
 package com.hyberlet.quendless.controller;
 
 import com.hyberlet.quendless.controller.exceptions.BadRequestException;
-import com.hyberlet.quendless.model.dto.ServerMessage;
 import com.hyberlet.quendless.model.User;
+import com.hyberlet.quendless.model.dto.ServerMessage;
+import com.hyberlet.quendless.model.dto.UserDto;
+import com.hyberlet.quendless.service.DtoService;
 import com.hyberlet.quendless.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private DtoService dtoService;
 
     // TODO: добавить всем методам @GetMapping(value = "/test", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(
@@ -25,8 +29,8 @@ public class UserController {
             description = "Только для админов. Для других пользователей - Forbidden"
     )
     @GetMapping("/users")
-    public List<User> getAll() {
-        return userService.userList();
+    public List<UserDto> getAll() {
+        return userService.userList().stream().map(dtoService::userToDto).toList();
     }
 
 
@@ -52,8 +56,8 @@ public class UserController {
             description = "Возвращает пользователя, который отправил этот запрос"
     )
     @GetMapping("/users/me")
-    public User getCurrentUser() {
-        return userService.getCurrentUser();
+    public UserDto getCurrentUser() {
+        return dtoService.userToDto(userService.getCurrentUser());
     }
 
     @Operation(

@@ -3,8 +3,11 @@ package com.hyberlet.quendless.service;
 import com.hyberlet.quendless.aspect.LoggedAction;
 import com.hyberlet.quendless.model.Group;
 import com.hyberlet.quendless.model.Permission;
+import com.hyberlet.quendless.model.Queue;
 import com.hyberlet.quendless.model.User;
+import com.hyberlet.quendless.repository.GroupRepository;
 import com.hyberlet.quendless.repository.PermissionRepository;
+import com.hyberlet.quendless.repository.QueueRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +20,10 @@ import java.util.UUID;
 public class PermissionService {
     @Autowired
     private PermissionRepository permissionRepository;
+    @Autowired
+    private GroupRepository groupRepository;
+    @Autowired
+    private QueueRepository queueRepository;
 
     public Permission createPermission(Permission permission) {
         return permissionRepository.save(permission);
@@ -46,6 +53,13 @@ public class PermissionService {
                 return true;
         }
         return false;
+    }
+
+    @LoggedAction
+    public Boolean isModerator(User user, Queue queue) {
+        Queue serverQueue = queueRepository.getById(queue.getQueueId());
+        Group serverGroup = groupRepository.getById(serverQueue.getGroup().getGroupId());
+        return isModerator(user, serverGroup);
     }
 
     @LoggedAction

@@ -1,13 +1,16 @@
 package com.hyberlet.quendless.controller;
 
+import com.hyberlet.quendless.controller.exceptions.AccessDeniedException;
+import com.hyberlet.quendless.controller.exceptions.BadRequestException;
 import com.hyberlet.quendless.controller.exceptions.EntityNotFoundException;
 import com.hyberlet.quendless.model.Group;
 import com.hyberlet.quendless.model.Queue;
 import com.hyberlet.quendless.model.QueueMember;
 import com.hyberlet.quendless.model.User;
-import com.hyberlet.quendless.service.GroupService;
-import com.hyberlet.quendless.service.QueueService;
-import com.hyberlet.quendless.service.UserService;
+import com.hyberlet.quendless.model.dto.QueueDto;
+import com.hyberlet.quendless.model.dto.QueueMemberDto;
+import com.hyberlet.quendless.model.dto.ServerMessage;
+import com.hyberlet.quendless.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,25 +28,47 @@ public class QueueController {
     private QueueService queueService;
     @Autowired
     private GroupService groupService;
+    @Autowired
+    private QueueMemberService queueMemberService;
+    @Autowired
+    private GroupMemberService groupMemberService;
+    @Autowired
+    private PermissionService permissionService;
+    @Autowired
+    private DtoService dtoService;
+
+    @Operation(
+            summary = "Получить очереди",
+            description = "Возвращает список очередей в которых состоит пользователь"
+    )
+    @GetMapping("/queues")
+    public List<QueueDto> getQueues() {
+        User user = userService.getCurrentUser();
+        List<Queue> queues = queueService.getUserQueues(user);
+        return dtoService.queuesToDto(queues);
+    }
 
     @Operation(
             summary = "Получить всех участников очереди по её id",
             description = "Если очереди не существует - NotFound. Если пользователь не состоит в ней - Forbidden"
     )
     @GetMapping("/queues/{queueId}/members")
-    public List<User> getQueueMembers(@PathVariable UUID queueId) {
-        List<User> members = queueService.getQueueMembers(queueId);
-        System.out.println(members);
-        return members;
+    public List<QueueMemberDto> getQueueMembers(@PathVariable UUID queueId) {
+        List<QueueMember> members = queueService.getQueueMembers(queueId);
+        return dtoService.queueMembersToDto(members);
     }
     @Operation(
             summary = "Получить очередь по её id",
-            description = "Не реализовано. Если очереди не существует - NotFound. Если пользователь не состоит в ней - Forbidden"
+            description = "Если очереди не существует - NotFound. Если пользователь не состоит в ней - Forbidden"
     )
     @GetMapping("/queues/{queueId}")
-    public Queue getQueue(@PathVariable UUID queueId) {
-        // todo: implement
-        return null;
+    public QueueDto getQueue(@PathVariable UUID queueId) {
+        Queue queue = queueService.getQueueById(queueId);
+        Group group = groupService.getGroupById(queue.getGroup().getGroupId());
+        User user = userService.getCurrentUser();
+        if (groupMemberService.isMember(user, group))
+            return dtoService.queueToDto(queue);
+        throw new AccessDeniedException("access denied");
     }
 
     @Operation(
@@ -52,52 +77,69 @@ public class QueueController {
     )
     @PostMapping("/groups/{groupId}/queues")
     @ResponseStatus(HttpStatus.CREATED)
-    public Queue createQueue(@RequestBody Queue queue, @PathVariable UUID groupId) throws EntityNotFoundException {
+    public QueueDto createQueue(@RequestBody Queue queue, @PathVariable UUID groupId) throws EntityNotFoundException {
         Group group = groupService.getGroupById(groupId);
         queue.setGroup(group);
-        return queueService.createQueue(queue);
+        return dtoService.queueToDto(queueService.createQueue(queue));
     }
 
     @Operation(
             summary = "Встать в очередь по её id",
             description = ""
     )
-    @GetMapping("/queues/{queueId}/join")
-    public QueueMember joinQueue(@PathVariable UUID queueId) {
-        System.out.println(queueId);
+    @PostMapping("/queues/{queueId}/join")
+    public QueueMemberDto joinQueue(@PathVariable UUID queueId) {
         User user = userService.getCurrentUser();
         Queue queue = queueService.getQueueById(queueId);
-        return queueService.insertUserInQueue(user, queue);
+        QueueMember queueMember = queueMemberService.getQueueMember(queue, user);
+        if (queueMember != null)
+            throw new BadRequestException("User is already added in queue");
+        return dtoService.queueMemberToDto(
+                queueMemberService.createQueueMember(user, queue)
+        );
     }
 
     @Operation(
             summary = "Выйти из очереди по id",
             description = ""
     )
-    @GetMapping("/queues/{queueId}/leave")
-    public QueueMember leaveQueue(@PathVariable UUID queueId) {
+    @PostMapping("/queues/{queueId}/leave")
+    public QueueMemberDto leaveQueue(@PathVariable UUID queueId) {
         User user = userService.getCurrentUser();
         Queue queue = queueService.getQueueById(queueId);
-        return queueService.removeUserFromQueue(user, queue);
+        QueueMember queueMember = queueMemberService.getQueueMember(queue, user);
+        if (queueMember == null)
+            throw new BadRequestException("User is not in queue");
+        return dtoService.queueMemberToDto(
+                queueMemberService.deleteQueueMember(user, queue)
+        );
     }
 
     @Operation(
             summary = "Изменить очередь по id",
-            description = "Не реализовано"
+            description = ""
     )
-    @PutMapping("/queues/{queueId}")
-    public String editQueue(@PathVariable UUID queueId, @RequestBody Queue queue) {
-        // todo: implement
-        return null;
+    @PutMapping("/queues")
+    public QueueDto editQueue(@RequestBody Queue queue) {
+        User user = userService.getCurrentUser();
+        if (permissionService.isModerator(user, queue)) {
+            return dtoService.queueToDto(queueService.editQueue(queue));
+        }
+        return dtoService.queueToDto(queue);
     }
 
     @Operation(
             summary = "Удалить очередь по id",
-            description = "Не реализовано"
+            description = ""
     )
     @DeleteMapping("/queues/{queueId}")
-    public String deleteQueue(@PathVariable UUID queueId) {
-        // todo: implement
-        return null;
+    public ServerMessage deleteQueue(@PathVariable UUID queueId) {
+        User user = userService.getCurrentUser();
+        Queue queue = queueService.getQueueById(queueId);
+        if (permissionService.isModerator(user, queue)) {
+            queueService.deleteQueue(queue);
+            return new ServerMessage("Ok");
+        }
+        return new ServerMessage("Forbidden");
     }
 }
