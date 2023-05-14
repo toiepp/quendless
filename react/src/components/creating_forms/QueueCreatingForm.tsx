@@ -3,9 +3,11 @@ import makeRequest from '../../requests/base';
 import {useDispatch, useSelector} from 'react-redux';
 import {useState} from 'react';
 import {
+    setCreateMode,
     setCreateQueueDescription,
-    setCreateQueueName,
-    setCreateMode, setCreateQueueEventBegin, setCreateQueueEventEnd
+    setCreateQueueEventBegin,
+    setCreateQueueEventEnd,
+    setCreateQueueName
 } from '../../store/slices/queueSlice';
 
 export function validateQueueForm(queue: Queue): string[] {

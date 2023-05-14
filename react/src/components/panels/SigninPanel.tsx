@@ -1,11 +1,6 @@
 import {Panel} from '../primitives/Panel';
 import {useDispatch, useSelector} from 'react-redux';
-import {
-    setLocalIsAuth,
-    switchToSignUp,
-    updateLogin,
-    updatePassword,
-} from '../../store/slices/authSlice';
+import {setLocalIsAuth, switchToSignUp, updateLogin, updatePassword,} from '../../store/slices/authSlice';
 import {ServerMessage, User} from '../../types';
 import makeRequest from '../../requests/base';
 import {useState} from 'react';
