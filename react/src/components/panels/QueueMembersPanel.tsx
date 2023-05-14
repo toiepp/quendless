@@ -51,7 +51,7 @@ export function QueueMembersPanel({queue}: {queue: Queue}) {
         return () => {
             clearInterval(interval);
         };
-    }, [queue])
+    }, [me.login, me.userId, queue])
     useEffect(() => {
         makeGetCurrentUserRequest().then((user) => setMe(user))
     })
@@ -70,4 +70,4 @@ export function QueueMembersPanel({queue}: {queue: Queue}) {
             <UserCardList users={users} emptyMessage={'В группе нет участников'}/>
         </>
     );
-};
+}
