@@ -6,7 +6,7 @@ import {useDispatch} from 'react-redux';
 import {useEffect, useState} from 'react';
 import makeRequest from '../../requests/base';
 
-async function getGroups(): Promise<Group[]> {
+async function makeGetUserGroupsRequest(): Promise<Group[]> {
     const data = await makeRequest({
         relativeUrl: '/groups',
         method: 'get'
@@ -20,7 +20,7 @@ export function UserGroupsPanel() {
     const [groups, setGroups]: [Group[], any] = useState([])
     useEffect(() => {
         const interval = setInterval(() => {
-            getGroups().then((groups) => setGroups(groups));
+            makeGetUserGroupsRequest().then((groups) => setGroups(groups));
         }, 1000);
 
         return () => {
@@ -34,7 +34,8 @@ export function UserGroupsPanel() {
                 dispatch(setCreateMode(false))
             }}>Поиск</button>
             <GroupCreatingForm/>
-            <GroupCardList groups={groups} view={{editable: true}}/>
+            <GroupCardList groups={groups} view={{editable: true}}
+                           emptyMessage={'Список групп пуст. Создайте новую группу или вступите в существующую'}/>
         </>
     );
 }

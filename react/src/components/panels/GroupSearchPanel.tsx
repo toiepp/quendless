@@ -47,7 +47,7 @@ export function GroupSearchPanel() {
                     Поиск
                 </button>
             </div>
-            <GroupCardList groups={groups} view={{editable: false}}></GroupCardList>
+            <GroupCardList groups={groups} view={{editable: false}} emptyMessage={'Нет групп, удовлетворяющих шаблону поиска'}/>
         </>
     );
 }

@@ -5,8 +5,11 @@ import {NavLink} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import {
     setEditGroupDescription,
-    setEditGroupId, setEditGroupName,
-    setEditMode, setRemoveGroupId, setRemoveMode
+    setEditGroupId,
+    setEditGroupName,
+    setEditMode,
+    setRemoveGroupId,
+    setRemoveMode
 } from '../../store/slices/groupSlice';
 import makeRequest from '../../requests/base';
 import {useState} from 'react';
@@ -71,7 +74,14 @@ export function GroupCard({group, view}: {group: Group, view: CardViewSettings})
                                    value={edit.name} onChange={(event) => dispatch(setEditGroupName(event.target.value))}/>
                         </>
                         :
-                        <h5><NavLink to={`/groups/${group.groupId}`}>{group.name}</NavLink></h5>
+                        <>
+                            {
+                                group.membership ?
+                                    <h5><NavLink to={`/groups/${group.groupId}`}>{group.name}</NavLink></h5>
+                                    :
+                                    <h5>{group.name}</h5>
+                            }
+                        </>
                 }
             </CardRow>
             <CardRow>

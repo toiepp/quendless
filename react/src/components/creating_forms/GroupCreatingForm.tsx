@@ -69,9 +69,6 @@ export function GroupCreatingForm() {
                     }}>Создать</button>
                 </div>
             </div>
-            <div className='text-danger'>
-
-            </div>
         </>
     );
 }

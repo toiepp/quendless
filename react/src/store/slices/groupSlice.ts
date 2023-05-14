@@ -3,6 +3,7 @@ import {createSlice} from '@reduxjs/toolkit';
 export const groupSlice = createSlice({
     name: 'group',
     initialState: {
+        viewMode: 'queues',
         search: {
             enabled: false,
             template: '',
@@ -56,7 +57,10 @@ export const groupSlice = createSlice({
         },
         setSearchTemplate: (state, action: {payload: string}) => {
             state.search.template = action.payload
-        }
+        },
+        setViewMode: (state, action: {payload: string}) => {
+            state.viewMode = action.payload
+        },
     },
 })
 
@@ -64,5 +68,5 @@ export const groupSlice = createSlice({
 export const {
     setCreateMode, setEditMode, setCreateGroupName, setCreateGroupDescription,
     setEditGroupName, setEditGroupDescription, setEditGroupId, setRemoveMode, setRemoveGroupId,
-    setSearchTemplate, setSearchMode
+    setSearchTemplate, setSearchMode, setViewMode
 } = groupSlice.actions

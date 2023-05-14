@@ -1,6 +1,7 @@
 import {combineReducers, legacy_createStore as createStore} from '@reduxjs/toolkit'
 import {authSlice} from './slices/authSlice';
 import {groupSlice} from './slices/groupSlice';
+import {queueSlice} from './slices/queueSlice';
 
 const saveToLocalStorage = (state: any) => {
     try {
@@ -23,6 +24,7 @@ const loadFromLocalStorage = () => {
 const rootReducer = combineReducers({
     auth: authSlice.reducer,
     group: groupSlice.reducer,
+    queue: queueSlice.reducer,
 });
 
 const persistedStore = loadFromLocalStorage();

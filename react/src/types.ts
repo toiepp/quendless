@@ -9,8 +9,9 @@ interface Group {
 interface User {
     [index: string]: any,
     userId?: string,
+    name?: string
     login: string,
-    password: string,
+    password?: string,
 }
 
 interface ServerMessage {
@@ -21,8 +22,9 @@ interface Queue {
     queueId?: string,
     name: string,
     description?: string
-    startDate?: Date,
-    endDate?: Date,
+    eventBegin?: string,
+    eventEnd?: string,
+    groupId?: string,
     membership?: boolean,
     editable?: boolean,
 }
@@ -31,4 +33,17 @@ interface CardViewSettings {
     editable: boolean
 }
 
-export type { Group, User, ServerMessage, Queue, CardViewSettings };
+interface QueueMember {
+    queueMemberId: string,
+    queue: Queue,
+    user: User,
+    position: number,
+}
+
+interface GroupMember {
+    groupMemberId: string,
+    group: Group,
+    user: User
+}
+
+export type { Group, User, Queue, GroupMember, QueueMember, CardViewSettings, ServerMessage };
