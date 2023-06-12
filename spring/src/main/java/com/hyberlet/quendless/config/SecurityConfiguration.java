@@ -90,7 +90,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     CorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://84.201.153.208:3000"));
+        configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://84.201.153.208:3000", "http://quendless.ru"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PUT","OPTIONS","PATCH", "DELETE"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
