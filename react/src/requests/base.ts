@@ -1,5 +1,6 @@
 // export const serverUrl = 'http://localhost:8080'
-export const serverUrl = 'http://84.201.153.208:8080'
+// export const serverUrl = 'http://84.201.153.208:8080'
+export const serverUrl = 'http://quendless.ru:8080'
 
 interface RequestInfo {
     relativeUrl: string,
