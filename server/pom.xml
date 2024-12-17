@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.hyberlet</groupId>
-	<artifactId>quendless</artifactId>
+	<artifactId>server</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>quendless</name>
+	<name>server</name>
 	<description>Term paper project based on Spring Framework</description>
 	<properties>
 		<java.version>11</java.version>
